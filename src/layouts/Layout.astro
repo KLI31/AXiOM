@@ -14,11 +14,73 @@ import Navbar from "../components/Navbar.astro";
         <meta name="generator" content={Astro.generator} />
         <title>Axiom</title>
     </head>
-    <body class="bg-[#f6f1ec] text-stone-950">
+    <body class="bg-background text-text">
         <Navbar />
         <main>
             <slot />
         </main>
+
+        <script>
+            import { inView, animate } from "motion";
+
+            const prefersReducedMotion = window.matchMedia(
+                "(prefers-reduced-motion: reduce)"
+            ).matches;
+
+            function initChatScrollReveal() {
+                const blocks = document.querySelectorAll("main > *");
+                if (!blocks.length) return;
+
+                blocks.forEach((block, index) => {
+                    if (!(block instanceof HTMLElement)) return;
+
+                    // The first block is treated as the hero/splash section;
+                    // it usually has its own entrance animation, so we leave
+                    // it untouched to avoid conflicting motion.
+                    if (index === 0) return;
+
+                    if (prefersReducedMotion) {
+                        block.style.opacity = "1";
+                        return;
+                    }
+
+                    const staggerDelay = Math.min(index * 0.05, 0.15);
+
+                    block.style.willChange = "transform, opacity";
+                    block.style.opacity = "0";
+                    block.style.transform = "translateY(24px) scale(0.99)";
+
+                    inView(
+                        block,
+                        (element) => {
+                            const animation = animate(
+                                element,
+                                {
+                                    opacity: 1,
+                                    y: 0,
+                                    scale: 1,
+                                },
+                                {
+                                    duration: 0.7,
+                                    delay: staggerDelay,
+                                    ease: [0.22, 1, 0.36, 1],
+                                }
+                            );
+
+                            animation.then(() => {
+                                element.style.willChange = "auto";
+                            });
+                        },
+                        {
+                            margin: "-12% 0px -18% 0px",
+                            amount: 0.2,
+                        }
+                    );
+                });
+            }
+
+            initChatScrollReveal();
+        </script>
     </body>
 </html>
 

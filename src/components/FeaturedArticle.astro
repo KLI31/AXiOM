@@ -1,0 +1,145 @@
+---
+const featured = {
+    label: "Artículo destacado",
+    date: "26.07.2026",
+    title: "La IA no reemplaza. Potencia.",
+    description:
+        "Un análisis profundo sobre cómo la Inteligencia Artificial se integra con el talento humano para generar más valor, creatividad y mejores decisiones.",
+    href: "/articles/la-ia-no-reemplaza-potencia",
+    image: "/category1.webp",
+    imageAlt: "Imagen de portada del artículo destacado",
+};
+---
+
+<section class="border-border bg-surface relative z-10 min-h-[53vh] border-t">
+    <div
+        aria-hidden="true"
+        class="paper-grain pointer-events-none absolute inset-0 select-none"
+    >
+    </div>
+
+    <div
+        class="group relative mx-auto grid h-full min-h-[85vh] w-full max-w-360 gap-0 px-6 sm:px-10 lg:grid-cols-[59%_58%] lg:px-0"
+    >
+        <div
+            class="flex flex-col justify-center py-16 lg:px-12 lg:py-24 xl:px-16"
+        >
+            <div class="featured-animate mb-10 flex items-center gap-4">
+                <span class="bg-accent h-px w-10"></span>
+                <span
+                    class="text-accent text-xs font-medium tracking-[0.2em] uppercase"
+                >
+                    {featured.label}
+                </span>
+                <span class="text-text-secondary/60 text-xs">·</span>
+                <span class="text-text-secondary/60 text-xs"
+                    >{featured.date}</span
+                >
+            </div>
+
+            <h2
+                class="featured-animate text-text mb-8 text-[clamp(2.5rem,6vw,5rem)] leading-[1.0] font-normal tracking-[-0.03em]"
+            >
+                {featured.title}
+            </h2>
+
+            <p
+                class="featured-animate text-text-secondary mb-12 max-w-md text-base leading-[1.7] sm:text-lg"
+            >
+                {featured.description}
+            </p>
+
+            <a
+                href={featured.href}
+                class="featured-animate group/link text-text hover:text-accent inline-flex items-center gap-4 self-start text-sm font-medium transition-colors"
+            >
+                <span
+                    class="relative tracking-widest uppercase after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-current after:transition-all after:duration-500 after:ease-out after:content-[''] group-hover/link:after:w-full"
+                >
+                    Leer artículo
+                </span>
+                <span
+                    class="text-text group-hover/link:text-accent inline-flex items-center justify-center transition-all duration-300 group-hover/link:translate-x-1"
+                    aria-hidden="true"
+                >
+                    →
+                </span>
+            </a>
+        </div>
+
+        <div
+            class="relative h-full min-h-[30vh] w-full overflow-hidden lg:min-h-[inherit] lg:w-full"
+        >
+            <img
+                src={featured.image}
+                alt={featured.imageAlt}
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+            <div
+                aria-hidden="true"
+                class="from-surface via-surface/20 lg:from-surface/80 absolute inset-0 bg-gradient-to-r to-transparent"
+            >
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    import { inView, animate } from "motion";
+
+    const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    function initFeaturedArticleAnimations() {
+        const textElements = document.querySelectorAll(".featured-animate");
+
+        if (!textElements.length) return;
+
+        if (prefersReducedMotion) {
+            textElements.forEach((el) => {
+                el.style.opacity = "1";
+                el.style.transform = "none";
+            });
+            return;
+        }
+
+        textElements.forEach((el, index) => {
+            if (!(el instanceof HTMLElement)) return;
+
+            el.style.opacity = "0";
+            el.style.transform = "translateY(20px)";
+            el.style.willChange = "transform, opacity";
+
+            inView(
+                el,
+                (element) => {
+                    const animation = animate(
+                        element,
+                        {
+                            opacity: 1,
+                            y: 0,
+                        },
+                        {
+                            duration: 0.7,
+                            delay: index * 0.1,
+                            ease: [0.22, 1, 0.36, 1],
+                        }
+                    );
+
+                    animation.then(() => {
+                        element.style.willChange = "auto";
+                    });
+                },
+                {
+                    margin: "0px 0px -12% 0px",
+                    amount: 0.2,
+                }
+            );
+        });
+    }
+
+    initFeaturedArticleAnimations();
+</script>

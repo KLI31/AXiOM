@@ -3,7 +3,7 @@ import PaperDot from "@/components/PaperDot";
 import WelcomeText from "@/components/WelcomeText";
 ---
 
-<section class="relative min-h-svh overflow-hidden bg-[#f6f1ec]">
+<section class="bg-background relative z-0 min-h-svh overflow-hidden">
     <div
         aria-hidden="true"
         class="absolute inset-y-0 right-0 aspect-[1419/1108] max-w-none [mask-image:linear-gradient(to_right,transparent_0%,black_18%)] select-none"
@@ -13,7 +13,7 @@ import WelcomeText from "@/components/WelcomeText";
 
     <div
         aria-hidden="true"
-        class="absolute inset-0 bg-linear-to-r from-[#f6f1ec] via-[#f6f1ec]/90 to-[#f6f1ec]/25 sm:hidden"
+        class="from-background via-background/90 to-background/25 absolute inset-0 bg-linear-to-r sm:hidden"
     >
     </div>
 
@@ -36,5 +36,11 @@ import WelcomeText from "@/components/WelcomeText";
         class="relative z-10 mx-auto flex min-h-svh w-full max-w-360 items-center px-6 sm:px-10 lg:px-12 xl:px-16"
     >
         <WelcomeText client:load />
+    </div>
+
+    <div
+        aria-hidden="true"
+        class="to-background pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-32 bg-gradient-to-b from-transparent sm:h-40"
+    >
     </div>
 </section>

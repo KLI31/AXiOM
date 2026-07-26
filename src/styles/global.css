@@ -1,5 +1,31 @@
 @import "tailwindcss";
 
+@theme {
+    --color-background: #f6f3ed;
+    --color-surface: #ece8e1;
+    --color-text: #111111;
+    --color-text-secondary: #5f5b57;
+    --color-border: #d8d2c7;
+    --color-accent: #b96a46;
+    --color-accent-blue: #465e78;
+    --color-accent-olive: #70755a;
+    --color-accent-sand: #c8ae82;
+    --color-code-bg: #181818;
+}
+
+:root {
+    --background: #f6f3ed;
+    --surface: #ece8e1;
+    --text: #111111;
+    --text-secondary: #5f5b57;
+    --border: #d8d2c7;
+    --accent: #b96a46;
+    --accent-blue: #465e78;
+    --accent-olive: #70755a;
+    --accent-sand: #c8ae82;
+    --code-bg: #181818;
+}
+
 /* Trama de micro-puntos que imita el grano del shader halftone,
    para extender la textura de papel a toda la sección. */
 @utility paper-grain {

@@ -1,0 +1,79 @@
+---
+import CategoryCard from "@/components/CategoryCard.tsx";
+
+const categories = [
+    {
+        image: "/category1.webp",
+        category: "Estrategia",
+        title: "Inteligencia Artificial",
+        description:
+            "Modelos, herramientas y reflexiones sobre cómo la IA cambia la forma en que creamos.",
+        href: "/categories/ia",
+    },
+    {
+        image: "/category2.webp",
+        category: "Código",
+        title: "Desarrollo de Software",
+        description:
+            "Código, arquitectura y decisiones prácticas para construir productos mejores.",
+        href: "/categories/software",
+    },
+    {
+        image: "/category3.webp",
+        category: "Hábitos",
+        title: "Productividad",
+        description:
+            "Flujos de trabajo, automatización y hábitos para pensar con más claridad.",
+        href: "/categories/productividad",
+    },
+    {
+        image: "/category4.webp",
+        category: "Ideas",
+        title: "Reflexiones",
+        description:
+            "Ideas sobre tecnología, creatividad y el ritmo con que construimos el futuro.",
+        href: "/categories/reflexiones",
+    },
+];
+---
+
+<section class="bg-background relative z-10 overflow-hidden py-16 sm:py-24">
+    <img
+        src="/logo.png"
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+        class="pointer-events-none absolute -bottom-[14rem] -left-[10rem] z-1 w-[40rem] rotate-12 opacity-[0.025] mix-blend-multiply select-none lg:-bottom-[18rem] lg:-left-[14rem] lg:w-[50rem]"
+    />
+
+    <div
+        aria-hidden="true"
+        class="paper-grain pointer-events-none absolute inset-0 z-2 select-none"
+    >
+    </div>
+
+    <div
+        class="relative z-10 mx-auto w-full max-w-360 px-6 sm:px-10 lg:px-12 xl:px-16"
+    >
+        <div class="mb-12 max-w-2xl sm:mb-16">
+            <h2
+                class="text-text mb-4 text-3xl font-normal tracking-tight sm:text-4xl"
+            >
+                Explora por categorías
+            </h2>
+            <p class="text-text-secondary text-base leading-relaxed">
+                Artículos organizados por temas para que encuentres lo que más
+                te interesa.
+            </p>
+        </div>
+
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {
+                categories.map((category) => (
+                    <CategoryCard client:visible {...category} />
+                ))
+            }
+        </div>
+    </div>
+</section>

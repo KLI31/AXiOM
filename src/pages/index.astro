@@ -1,8 +1,14 @@
 ---
-import Welcome from "../components/Welcome.astro";
-import Layout from "../layouts/Layout.astro";
+import Welcome from "@/components/Welcome.astro";
+import Layout from "@/layouts/Layout.astro";
+import FeaturedArticle from "@/components/FeaturedArticle.astro";
+import CategoriesSection from "@/components/CategoriesSection.astro";
+import ManifestoSection from "@/components/ManifestoSection.astro";
 ---
 
 <Layout>
     <Welcome />
+    <FeaturedArticle />
+    <CategoriesSection />
+    <ManifestoSection />
 </Layout>

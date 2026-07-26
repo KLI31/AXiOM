@@ -1,0 +1,438 @@
+---
+const statement = [
+    { text: "La tecnología", spacing: false },
+    { text: "no cambia el mundo.", spacing: true },
+    { text: "Las personas", spacing: false },
+    { text: "que la entienden sí.", spacing: false },
+];
+
+const lede =
+    "Creemos que la tecnología merece menos ruido y más entendimiento.";
+
+const practices = [
+    "Escribimos para personas curiosas y mentes inquietas.",
+    "Publicamos cuando tenemos algo que decir.",
+    "No vendemos el algoritmo ni el póster.",
+];
+---
+
+<section
+    id="manifiesto"
+    class="border-border bg-background relative z-10 overflow-hidden"
+>
+    <div
+        aria-hidden="true"
+        class="paper-grain pointer-events-none absolute inset-0 z-2 select-none"
+    >
+    </div>
+
+    <div
+        class="relative mx-auto grid w-full max-w-360 gap-0 lg:min-h-screen lg:grid-cols-[32%_40%_28%]"
+    >
+        <div
+            class="flex flex-col justify-center px-6 py-16 sm:px-10 lg:py-24 lg:pr-8 lg:pl-12 xl:pl-16"
+        >
+            <span
+                aria-hidden="true"
+                class="manifesto-quote text-text mb-12 block text-[5rem] leading-[0.75] font-medium select-none"
+                >«</span
+            >
+
+            <h2
+                class="text-text text-[clamp(2rem,3.4vw,3.5rem)] leading-[1.08] font-normal tracking-[-0.03em]"
+            >
+                {
+                    statement.map((line) => (
+                        <span
+                            class:list={[
+                                "manifesto-line block",
+                                { "mb-8": line.spacing },
+                            ]}
+                        >
+                            <span class="manifesto-line-inner block">
+                                {line.text}
+                            </span>
+                        </span>
+                    ))
+                }
+            </h2>
+        </div>
+
+        <div
+            class="manifesto-media relative min-h-[55vh] overflow-hidden lg:min-h-0"
+        >
+            <div
+                class="manifesto-parallax absolute inset-x-0 -top-[8%] flex h-[116%] items-center justify-center"
+            >
+                <div
+                    aria-hidden="true"
+                    class="manifesto-image h-full w-full overflow-hidden"
+                >
+                    <img
+                        src="/section.png"
+                        alt=""
+                        class="h-full w-full object-cover opacity-45"
+                        loading="lazy"
+                        decoding="async"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="flex flex-col justify-center px-6 py-16 sm:px-10 lg:py-24 lg:pr-12 lg:pl-10 xl:pr-16"
+        >
+            <div class="manifesto-label-row mb-10 flex items-center gap-4">
+                <span
+                    aria-hidden="true"
+                    class="manifesto-rule bg-accent block h-px w-10"></span>
+                <span
+                    class="manifesto-fade text-accent text-xs font-medium tracking-[0.2em] uppercase"
+                    >Nuestro manifiesto</span
+                >
+            </div>
+
+            <p
+                class="manifesto-fade text-text mb-10 max-w-[22ch] text-xl leading-[1.45] tracking-[-0.015em] sm:text-2xl"
+            >
+                {lede}
+            </p>
+
+            {
+                practices.map((practice) => (
+                    <p class="manifesto-fade text-text-secondary mb-5 max-w-[26ch] text-base leading-[1.7] last:mb-0 sm:text-lg">
+                        {practice}
+                    </p>
+                ))
+            }
+
+            <p
+                class="manifesto-fade text-text mt-10 max-w-[26ch] text-base leading-[1.7] sm:text-lg"
+            >
+                Creamos más valor.
+                <strong class="font-semibold tracking-[0.08em]">AXIOM</strong>
+                <span aria-hidden="true" class="text-accent">↗</span>
+            </p>
+        </div>
+    </div>
+
+    <style>
+        .manifesto-image {
+            -webkit-mask-image:
+                linear-gradient(
+                    to right,
+                    transparent 0%,
+                    black 15%,
+                    black 85%,
+                    transparent 100%
+                ),
+                linear-gradient(
+                    to bottom,
+                    transparent 0%,
+                    black 10%,
+                    black 90%,
+                    transparent 100%
+                );
+            mask-image:
+                linear-gradient(
+                    to right,
+                    transparent 0%,
+                    black 15%,
+                    black 85%,
+                    transparent 100%
+                ),
+                linear-gradient(
+                    to bottom,
+                    transparent 0%,
+                    black 10%,
+                    black 90%,
+                    transparent 100%
+                );
+            -webkit-mask-composite: source-in;
+            mask-composite: intersect;
+        }
+    </style>
+
+    <script>
+        import { inView, animate, scroll } from "motion";
+
+        const prefersReducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        interface WordPair {
+            mask: HTMLSpanElement;
+            word: HTMLSpanElement;
+        }
+
+        // Splits a line's text into individually masked word spans so each
+        // word can rise on its own within the line.
+        function splitLineIntoWords(inner: HTMLElement): WordPair[] {
+            const text = inner.textContent ?? "";
+            inner.textContent = "";
+
+            const pairs: WordPair[] = [];
+            const words = text.split(/\s+/).filter(Boolean);
+
+            words.forEach((wordText, index) => {
+                const mask = document.createElement("span");
+                mask.style.display = "inline-block";
+                mask.style.overflow = "hidden";
+                mask.style.verticalAlign = "bottom";
+
+                const word = document.createElement("span");
+                word.style.display = "inline-block";
+                word.textContent = wordText;
+
+                mask.appendChild(word);
+                inner.appendChild(mask);
+                if (index < words.length - 1) {
+                    inner.appendChild(document.createTextNode(" "));
+                }
+                pairs.push({ mask, word });
+            });
+
+            return pairs;
+        }
+
+        function initManifestoAnimations() {
+            const section = document.querySelector("#manifiesto");
+            if (!section) return;
+
+            const quote = section.querySelector(".manifesto-quote");
+            const lineInners = section.querySelectorAll(
+                ".manifesto-line-inner"
+            );
+            const media = section.querySelector(".manifesto-media");
+            const parallaxLayer = section.querySelector(".manifesto-parallax");
+            const image = section.querySelector(".manifesto-image");
+            const rule = section.querySelector(".manifesto-rule");
+            const labelRow = section.querySelector(".manifesto-label-row");
+
+            const fades: HTMLElement[] = [];
+            section.querySelectorAll(".manifesto-fade").forEach((el) => {
+                if (el instanceof HTMLElement) fades.push(el);
+            });
+
+            if (prefersReducedMotion) {
+                if (quote instanceof HTMLElement) {
+                    quote.style.opacity = "1";
+                    quote.style.transform = "none";
+                }
+                fades.forEach((el) => {
+                    el.style.opacity = "1";
+                    el.style.transform = "none";
+                });
+                if (rule instanceof HTMLElement) rule.style.transform = "none";
+                if (media instanceof HTMLElement) media.style.clipPath = "none";
+                if (image instanceof HTMLElement)
+                    image.style.transform = "none";
+                return;
+            }
+
+            // Split the statement into words only when we will animate, so the
+            // plain markup stays untouched for no-JS / reduced-motion users.
+            const wordPairs: WordPair[] = [];
+            lineInners.forEach((inner) => {
+                if (!(inner instanceof HTMLElement)) return;
+                wordPairs.push(...splitLineIntoWords(inner));
+            });
+
+            // Initial hidden states (only applied by JS, so content remains
+            // visible if scripts never run).
+            if (quote instanceof HTMLElement) {
+                quote.style.opacity = "0";
+                quote.style.transform = "scale(0.8)";
+                quote.style.willChange = "transform, opacity";
+            }
+
+            wordPairs.forEach(({ word }) => {
+                word.style.opacity = "0";
+                word.style.transform = "translateY(110%)";
+                word.style.willChange = "transform, opacity";
+            });
+
+            fades.forEach((el) => {
+                el.style.opacity = "0";
+                el.style.transform = "translateY(18px)";
+                el.style.willChange = "transform, opacity";
+            });
+
+            if (rule instanceof HTMLElement) {
+                rule.style.transform = "scaleX(0)";
+                rule.style.transformOrigin = "left center";
+                rule.style.willChange = "transform";
+            }
+
+            if (media instanceof HTMLElement) {
+                media.style.clipPath = "inset(100% 0% 0% 0%)";
+                media.style.willChange = "clip-path";
+            }
+
+            if (image instanceof HTMLElement) {
+                image.style.transform = "scale(1.12)";
+                image.style.willChange = "transform";
+            }
+
+            // Subtle scroll-linked parallax on the image layer. The layer is
+            // 116% tall with an 8% top overhang, so a ±6% drift never exposes
+            // the container edges.
+            if (
+                parallaxLayer instanceof HTMLElement &&
+                media instanceof HTMLElement
+            ) {
+                parallaxLayer.style.willChange = "transform";
+                scroll(
+                    animate(
+                        parallaxLayer,
+                        { y: ["-6%", "6%"] },
+                        { ease: "linear" }
+                    ),
+                    {
+                        target: media,
+                        offset: ["start end", "end start"],
+                    }
+                );
+            }
+
+            // 1. Statement: quote glyph first, then word-by-word masked rise.
+            if (quote instanceof HTMLElement && wordPairs.length) {
+                let statementPlayed = false;
+
+                inView(
+                    quote,
+                    () => {
+                        if (statementPlayed) return;
+                        statementPlayed = true;
+
+                        const quoteAnimation = animate(
+                            quote,
+                            { opacity: [0, 1], scale: [0.8, 1] },
+                            { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+                        );
+                        quoteAnimation.then(() => {
+                            quote.style.willChange = "auto";
+                        });
+
+                        wordPairs.forEach(({ mask, word }, index) => {
+                            const wordAnimation = animate(
+                                word,
+                                { y: ["110%", "0%"], opacity: [0, 1] },
+                                {
+                                    duration: 0.8,
+                                    delay: 0.15 + index * 0.055,
+                                    ease: [0.22, 1, 0.36, 1],
+                                }
+                            );
+                            wordAnimation.then(() => {
+                                word.style.willChange = "auto";
+                                mask.style.overflow = "visible";
+                            });
+                        });
+                    },
+                    {
+                        margin: "0px 0px -12% 0px",
+                        amount: 0.2,
+                    }
+                );
+            }
+
+            // 2. Center image: cinematic bottom-up clip reveal + settle scale.
+            // Slightly delayed so the statement leads the choreography.
+            if (media instanceof HTMLElement) {
+                let mediaPlayed = false;
+
+                inView(
+                    media,
+                    () => {
+                        if (mediaPlayed) return;
+                        mediaPlayed = true;
+
+                        const clipAnimation = animate(
+                            media,
+                            {
+                                clipPath: [
+                                    "inset(100% 0% 0% 0%)",
+                                    "inset(0% 0% 0% 0%)",
+                                ],
+                            },
+                            {
+                                duration: 1.2,
+                                delay: 0.2,
+                                ease: [0.22, 1, 0.36, 1],
+                            }
+                        );
+                        clipAnimation.then(() => {
+                            media.style.willChange = "auto";
+                        });
+
+                        if (image instanceof HTMLElement) {
+                            const imageAnimation = animate(
+                                image,
+                                { scale: [1.12, 1] },
+                                {
+                                    duration: 1.35,
+                                    delay: 0.2,
+                                    ease: [0.22, 1, 0.36, 1],
+                                }
+                            );
+                            imageAnimation.then(() => {
+                                image.style.willChange = "auto";
+                            });
+                        }
+                    },
+                    {
+                        margin: "0px 0px -12% 0px",
+                        amount: 0.2,
+                    }
+                );
+            }
+
+            // 3. Right column: the accent rule draws in, then the label, lede
+            // and practices fade up in stagger.
+            if (labelRow instanceof HTMLElement && fades.length) {
+                let manifestoPlayed = false;
+
+                inView(
+                    labelRow,
+                    () => {
+                        if (manifestoPlayed) return;
+                        manifestoPlayed = true;
+
+                        if (rule instanceof HTMLElement) {
+                            const ruleAnimation = animate(
+                                rule,
+                                { scaleX: [0, 1] },
+                                { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
+                            );
+                            ruleAnimation.then(() => {
+                                rule.style.willChange = "auto";
+                            });
+                        }
+
+                        fades.forEach((el, index) => {
+                            const fadeAnimation = animate(
+                                el,
+                                { y: [18, 0], opacity: [0, 1] },
+                                {
+                                    duration: 0.7,
+                                    delay: 0.15 + index * 0.09,
+                                    ease: [0.22, 1, 0.36, 1],
+                                }
+                            );
+                            fadeAnimation.then(() => {
+                                el.style.willChange = "auto";
+                            });
+                        });
+                    },
+                    {
+                        margin: "0px 0px -12% 0px",
+                        amount: 0.2,
+                    }
+                );
+            }
+        }
+
+        initManifestoAnimations();
+    </script>
+</section>

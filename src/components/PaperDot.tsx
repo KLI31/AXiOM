@@ -1,7 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { HalftoneDots } from "@paper-design/shaders-react";
 
-const PaperDot = () => {
+interface PaperDotProps {
+    imageUrl?: string;
+    fit?: "none" | "contain" | "cover";
+    scale?: number;
+    colorBack?: string;
+}
+
+const PaperDot = ({
+    imageUrl = "/hands-clean.jpg",
+    fit = "cover",
+    scale = 1.04,
+    colorBack = "#f6f1ec",
+}: PaperDotProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [size, setSize] = useState({ width: 1280, height: 720 });
 
@@ -27,8 +39,8 @@ const PaperDot = () => {
             <HalftoneDots
                 width={size.width}
                 height={size.height}
-                image="/hands-clean.jpg"
-                colorBack="#f6f1ec"
+                image={imageUrl}
+                colorBack={colorBack}
                 colorFront="#211e1a"
                 originalColors={false}
                 type="classic"
@@ -40,8 +52,8 @@ const PaperDot = () => {
                 grainMixer={0.34}
                 grainOverlay={0.03}
                 grainSize={0.5}
-                scale={1.04}
-                fit="cover"
+                scale={scale}
+                fit={fit}
             />
         </div>
     );
