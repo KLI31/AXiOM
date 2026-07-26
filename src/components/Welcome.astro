@@ -1,0 +1,40 @@
+---
+import PaperDot from "@/components/PaperDot";
+import WelcomeText from "@/components/WelcomeText";
+---
+
+<section class="relative min-h-svh overflow-hidden bg-[#f6f1ec]">
+    <div
+        aria-hidden="true"
+        class="absolute inset-y-0 right-0 aspect-[1419/1108] max-w-none [mask-image:linear-gradient(to_right,transparent_0%,black_18%)] select-none"
+    >
+        <PaperDot client:load />
+    </div>
+
+    <div
+        aria-hidden="true"
+        class="absolute inset-0 bg-linear-to-r from-[#f6f1ec] via-[#f6f1ec]/90 to-[#f6f1ec]/25 sm:hidden"
+    >
+    </div>
+
+    <img
+        src="/logo.png"
+        alt=""
+        aria-hidden="true"
+        loading="eager"
+        decoding="async"
+        class="pointer-events-none absolute -bottom-58 -left-[2.5rem] z-1 hidden w-[64rem] rotate-12 opacity-[0.03] mix-blend-multiply select-none sm:-bottom-58 sm:-left-[11rem] sm:block sm:w-[64rem] lg:-bottom-[32rem] lg:-left-[28rem] lg:w-[75rem]"
+    />
+
+    <div
+        aria-hidden="true"
+        class="paper-grain pointer-events-none absolute inset-0 z-2 select-none"
+    >
+    </div>
+
+    <div
+        class="relative z-10 mx-auto flex min-h-svh w-full max-w-360 items-center px-6 sm:px-10 lg:px-12 xl:px-16"
+    >
+        <WelcomeText client:load />
+    </div>
+</section>

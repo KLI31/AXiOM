@@ -1,0 +1,46 @@
+---
+const navLinks = [
+    { label: "Artículos", href: "/articles" },
+    { label: "Categorías", href: "/categories" },
+    { label: "Sobre mí", href: "/about" },
+];
+---
+
+<header
+    class="pointer-events-none fixed inset-x-0 top-0 z-50 h-28 bg-linear-to-b from-[#f6f1ec] via-[#f6f1ec]/75 to-transparent"
+>
+    <nav
+        class="pointer-events-auto mx-auto flex h-20 max-w-360 items-center justify-between px-6 sm:px-10 lg:px-12 xl:px-16"
+        aria-label="Navegación principal"
+    >
+        <a href="/" class="flex items-center gap-2.5">
+            <img
+                src="/logo.png"
+                width="50"
+                height="50"
+                alt=""
+                class="mix-blend-multiply"
+            />
+            <span
+                class="mb-1 text-base font-semibold tracking-[0.24em] text-stone-900 uppercase"
+            >
+                Axiom
+            </span>
+        </a>
+
+        <ul class="hidden items-center gap-x-9 sm:flex">
+            {
+                navLinks.map((link) => (
+                    <li>
+                        <a
+                            href={link.href}
+                            class="border-b border-transparent py-2 text-sm font-medium text-stone-700 transition-colors duration-200 hover:border-stone-900 hover:text-stone-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-stone-900"
+                        >
+                            {link.label}
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+    </nav>
+</header>
