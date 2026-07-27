@@ -43,4 +43,29 @@ import WelcomeText from "@/components/WelcomeText";
         class="to-background pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-32 bg-gradient-to-b from-transparent sm:h-40"
     >
     </div>
+
+    <script>
+        import { animate } from "motion";
+
+        const prefersReducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+        const watermark = document.querySelector(".hero-watermark");
+
+        if (watermark && !prefersReducedMotion) {
+            (watermark as HTMLElement).style.opacity = "0";
+            (watermark as HTMLElement).style.transform =
+                "rotate(12deg) scale(1.02)";
+
+            animate(
+                watermark,
+                { opacity: 0.03, transform: "rotate(12deg) scale(1)" },
+                {
+                    duration: 1.4,
+                    delay: 0.2,
+                    ease: [0.22, 1, 0.36, 1],
+                }
+            );
+        }
+    </script>
 </section>

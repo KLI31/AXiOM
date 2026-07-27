@@ -34,6 +34,7 @@ Manage it with `pnpm astro dev status`, `pnpm astro dev logs`, `pnpm astro dev s
 - `@/*` imports map to `src/*`, defined in **both** `astro.config.mjs` (vite alias) and `tsconfig.json` (`paths`). Keep them in sync.
 - `CLAUDE.md` is a symlink to this file — edit `AGENTS.md` only; never replace the symlink with a regular file.
 - Pages use `src/layouts/Layout.astro` (loads DM Sans Variable font, global.css, Navbar). React components (`.tsx`) need a `client:*` directive to be interactive.
+- No test suite is configured yet — `pnpm build` and `pnpm lint` are the only automated checks.
 
 ## Documentation
 

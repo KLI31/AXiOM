@@ -1,0 +1,250 @@
+---
+const exploreLinks = [
+    { label: "Artículos", href: "/articles" },
+    { label: "Categorías", href: "/categories" },
+    { label: "Sobre mí", href: "/about" },
+];
+
+const socialLinks = [
+    { label: "Github", href: "https://github.com/" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/" },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer
+    class="from-background to-surface border-border/20 relative z-10 overflow-hidden border-t bg-gradient-to-b"
+>
+    <div
+        aria-hidden="true"
+        class="paper-grain pointer-events-none absolute inset-0 z-0 select-none"
+    >
+    </div>
+
+    <div
+        class="relative z-10 mx-auto grid w-full max-w-360 gap-10 px-6 py-14 sm:px-10 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:gap-8 lg:py-16 xl:px-16"
+    >
+        <div class="footer-fade flex flex-col">
+            <a href="/" class="flex-start flex items-center">
+                <img
+                    src="/logo.png"
+                    width="86"
+                    height="86"
+                    alt=""
+                    class="mix-blend-multiply"
+                />
+                <span
+                    class="text-base font-semibold tracking-[0.24em] text-stone-900 uppercase"
+                >
+                    Axiom
+                </span>
+            </a>
+            <p class="text-text-secondary text-md">
+                Escribo para entender. Comparto para recordar.
+            </p>
+            <p class="text-text-secondary">Montería, Colombia · Desde 2026</p>
+        </div>
+
+        <div class="footer-fade flex flex-col gap-4">
+            <span class="text-accent text-xs font-medium uppercase">
+                Navegar
+            </span>
+            <ul class="flex flex-col gap-3">
+                {
+                    exploreLinks.map((link) => (
+                        <li>
+                            <a
+                                href={link.href}
+                                class="text-text-secondary hover:text-text border-b border-transparent text-sm font-medium transition-colors duration-200 hover:border-stone-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-stone-900"
+                            >
+                                {link.label}
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+
+        <div class="footer-fade flex flex-col gap-4">
+            <span class="text-accent text-xs font-medium uppercase">
+                Encuentrame
+            </span>
+            <ul class="flex flex-col gap-3">
+                {
+                    socialLinks.map((link) => (
+                        <li>
+                            <a
+                                href={link.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="text-text-secondary hover:text-text border-b border-transparent text-sm font-medium transition-colors duration-200 hover:border-stone-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-stone-900"
+                            >
+                                {link.label}
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+
+        <div class="footer-fade flex flex-col gap-3 lg:items-end lg:text-right">
+            <p class="text-text-secondary text-xs">
+                © {year} AXIOM
+            </p>
+            <p class="text-text-secondary text-xs">
+                Todos los derechos reservados.
+            </p>
+        </div>
+    </div>
+
+    <div
+        class="relative mx-auto flex w-full max-w-360 justify-center overflow-hidden"
+    >
+        <p
+            role="img"
+            aria-label="AXIOM"
+            class="axiom-wordmark text-text flex text-[clamp(7rem,34vw,26rem)] leading-none font-medium tracking-[-0.02em] opacity-[0.03] select-none"
+        >
+            {
+                "AXIOM".split("").map((letter) => (
+                    <span
+                        aria-hidden="true"
+                        class="axiom-letter-mask inline-block overflow-hidden"
+                    >
+                        <span class="axiom-letter inline-block">{letter}</span>
+                    </span>
+                ))
+            }
+        </p>
+    </div>
+
+    <script>
+        import { inView, animate, stagger } from "motion";
+
+        const prefersReducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        function initAxiomOutroReveal() {
+            const wordmark = document.querySelector(".axiom-wordmark");
+            if (!wordmark) return;
+
+            const letters: HTMLElement[] = [];
+            wordmark.querySelectorAll(".axiom-letter").forEach((el) => {
+                if (el instanceof HTMLElement) letters.push(el);
+            });
+
+            if (!letters.length) return;
+
+            if (prefersReducedMotion) {
+                letters.forEach((el) => {
+                    el.style.opacity = "1";
+                    el.style.transform = "none";
+                    el.style.filter = "none";
+                });
+                return;
+            }
+
+            letters.forEach((el) => {
+                el.style.opacity = "0";
+                el.style.transform = "translateY(110%)";
+                el.style.filter = "blur(6px)";
+                el.style.willChange = "transform, opacity, filter";
+            });
+
+            let played = false;
+
+            inView(
+                wordmark,
+                () => {
+                    if (played) return;
+                    played = true;
+
+                    const animation = animate(
+                        letters,
+                        {
+                            y: ["110%", "0%"],
+                            opacity: [0, 1],
+                            filter: ["blur(6px)", "blur(0px)"],
+                        },
+                        {
+                            duration: 1,
+                            delay: stagger(0.1, { startDelay: 0.1 }),
+                            ease: [0.22, 1, 0.36, 1],
+                        }
+                    );
+
+                    animation.then(() => {
+                        letters.forEach((el) => {
+                            el.style.willChange = "auto";
+                        });
+                    });
+                },
+                {
+                    margin: "0px 0px -10% 0px",
+                    amount: 0.3,
+                }
+            );
+        }
+
+        function initFooterReveal() {
+            const footer = document.querySelector("footer");
+            if (!footer) return;
+
+            const fades: HTMLElement[] = [];
+            footer.querySelectorAll(".footer-fade").forEach((el) => {
+                if (el instanceof HTMLElement) fades.push(el);
+            });
+
+            if (!fades.length) return;
+
+            if (prefersReducedMotion) {
+                fades.forEach((el) => {
+                    el.style.opacity = "1";
+                    el.style.transform = "none";
+                });
+                return;
+            }
+
+            fades.forEach((el) => {
+                el.style.opacity = "0";
+                el.style.transform = "translateY(18px)";
+                el.style.willChange = "transform, opacity";
+            });
+
+            let played = false;
+
+            inView(
+                footer,
+                () => {
+                    if (played) return;
+                    played = true;
+
+                    const animation = animate(
+                        fades,
+                        { y: [18, 0], opacity: [0, 1] },
+                        {
+                            duration: 0.7,
+                            delay: stagger(0.08, { startDelay: 0.05 }),
+                            ease: [0.22, 1, 0.36, 1],
+                        }
+                    );
+
+                    animation.then(() => {
+                        fades.forEach((el) => {
+                            el.style.willChange = "auto";
+                        });
+                    });
+                },
+                {
+                    margin: "0px 0px -10% 0px",
+                    amount: 0.2,
+                }
+            );
+        }
+
+        initFooterReveal();
+        initAxiomOutroReveal();
+    </script>
+</footer>

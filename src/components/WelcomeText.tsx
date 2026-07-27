@@ -1,12 +1,14 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+
+const heroEase = [0.22, 1, 0.36, 1] as const;
 
 const container = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
         transition: {
-            delayChildren: 0.15,
-            staggerChildren: 0.12,
+            delayChildren: 0.25,
+            staggerChildren: 0.1,
         },
     },
 };
@@ -18,7 +20,7 @@ const line = {
         y: 0,
         transition: {
             duration: 0.8,
-            ease: [0.215, 0.61, 0.355, 1],
+            ease: heroEase,
         },
     },
 };
@@ -28,9 +30,8 @@ const highlight = {
     visible: {
         backgroundSize: "100% 100%",
         transition: {
-            duration: 0.7,
-            delay: 0.25,
-            ease: [0.215, 0.61, 0.355, 1],
+            duration: 0.8,
+            ease: heroEase,
         },
     },
 };
@@ -42,7 +43,7 @@ const fadeUp = {
         y: 0,
         transition: {
             duration: 0.7,
-            ease: [0.215, 0.61, 0.355, 1],
+            ease: heroEase,
         },
     },
 };
@@ -54,17 +55,19 @@ const cta = {
         x: 0,
         transition: {
             duration: 0.6,
-            ease: [0.215, 0.61, 0.355, 1],
+            ease: heroEase,
         },
     },
 };
 
 export default function WelcomeText() {
+    const prefersReducedMotion = useReducedMotion();
+
     return (
         <div className="max-w-xl pt-28 pb-20 sm:pt-24 sm:pl-8 lg:pl-16">
             <motion.h1
                 variants={container}
-                initial="hidden"
+                initial={prefersReducedMotion ? false : "hidden"}
                 animate="visible"
                 className="mt-12 text-[clamp(3.2rem,9vw,6rem)] leading-[1.0] font-medium tracking-[-0.02em] text-stone-950"
             >
@@ -96,9 +99,9 @@ export default function WelcomeText() {
             <motion.p
                 className="mt-9 max-w-84 text-[15px] leading-relaxed text-stone-600"
                 variants={fadeUp}
-                initial="hidden"
+                initial={prefersReducedMotion ? false : "hidden"}
                 animate="visible"
-                transition={{ delay: 0.8 }}
+                transition={{ delay: 0.85 }}
             >
                 Un lugar para pensar, construir y compartir ideas con calma.
             </motion.p>
@@ -107,9 +110,9 @@ export default function WelcomeText() {
                 href="/articles"
                 className="group mt-8 flex w-full max-w-88 items-center justify-between border-b border-stone-950 pb-3 text-sm font-medium text-stone-950 transition-colors outline-none hover:text-stone-600 focus-visible:ring-2 focus-visible:ring-stone-900 focus-visible:ring-offset-4 focus-visible:ring-offset-[#f6f1ec]"
                 variants={cta}
-                initial="hidden"
+                initial={prefersReducedMotion ? false : "hidden"}
                 animate="visible"
-                transition={{ delay: 1.0 }}
+                transition={{ delay: 1.05 }}
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
             >
