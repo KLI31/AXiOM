@@ -39,3 +39,19 @@
         0 0,
         2.3px 4.6px;
 }
+
+/* Variante de paper-grain que se desvanece hacia arriba para no competir
+   con fondos claros de secciones principalmente tipográficas. */
+@utility paper-grain-fade {
+    background-image:
+        radial-gradient(circle, rgb(70 64 52 / 0.07) 0.9px, transparent 1.15px),
+        radial-gradient(circle, rgb(70 64 52 / 0.045) 1.3px, transparent 1.55px);
+    background-size:
+        4.6px 4.6px,
+        9.2px 9.2px;
+    background-position:
+        0 0,
+        2.3px 4.6px;
+    -webkit-mask-image: linear-gradient(to top, black, transparent);
+    mask-image: linear-gradient(to top, black, transparent);
+}
