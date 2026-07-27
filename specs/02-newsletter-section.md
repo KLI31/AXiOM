@@ -1,6 +1,6 @@
 # 02 — Sección de newsletter (NewsletterSection)
 
-**Estado:** Approved
+**Estado:** Implemented
 **Dependencias:** Ninguna (usa los tokens de color y la textura `paper-grain` ya definidos en `global.css`; no depende del spec 01)
 **Fecha:** 2026-07-27
 
