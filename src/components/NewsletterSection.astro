@@ -20,6 +20,12 @@ const microcopy = [
     </div>
 
     <div
+        aria-hidden="true"
+        class="paper-grain pointer-events-none absolute inset-0 z-1 select-none"
+    >
+    </div>
+
+    <div
         class="relative z-10 mx-auto grid w-full max-w-360 gap-10 px-6 py-14 sm:px-10 lg:grid-cols-[36%_64%] lg:gap-16 lg:py-16 lg:pr-[26%] xl:px-16"
     >
         <div class="flex flex-col justify-center">
@@ -161,7 +167,7 @@ const microcopy = [
     </style>
 
     <script>
-        import { inView, animate } from "motion";
+        import { inView, animate, stagger } from "motion";
 
         const prefersReducedMotion = window.matchMedia(
             "(prefers-reduced-motion: reduce)"
@@ -203,8 +209,7 @@ const microcopy = [
                         { y: [18, 0], opacity: [0, 1] },
                         {
                             duration: 0.7,
-                            delay: 0.1,
-                            stagger: 0.09,
+                            delay: stagger(0.09, { startDelay: 0.1 }),
                             ease: [0.22, 1, 0.36, 1],
                         }
                     );
