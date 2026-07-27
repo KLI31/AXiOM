@@ -1,0 +1,228 @@
+---
+import StatCounter from "@/components/StatCounter.tsx";
+
+const eyebrow = "Últimos artículos";
+const heading = "Lo más reciente en AXIOM.";
+
+const articles = [
+    {
+        title: "Arquitectura Hexagonal explicada",
+        readingTime: "10 min de lectura",
+        href: "/articles/arquitectura-hexagonal-explicada",
+        image: "/category2.webp",
+    },
+    {
+        title: "¿Qué es MCP y por qué importa?",
+        readingTime: "6 min de lectura",
+        href: "/articles/que-es-mcp-y-por-que-importa",
+        image: "/category1.webp",
+    },
+    {
+        title: "RAG: Guía práctica para implementarlo",
+        readingTime: "14 min de lectura",
+        href: "/articles/rag-guia-practica-para-implementarlo",
+        image: "/category3.webp",
+    },
+];
+
+const statsHeading = "Una comunidad que no deja de crecer.";
+
+const stats = [
+    { value: 150, suffix: "+", label: "Artículos publicados" },
+    { value: 35, suffix: "", label: "Guías prácticas" },
+    { value: 18, suffix: "", label: "Categorías" },
+    { value: 12, suffix: "k+", label: "Lectores mensuales" },
+];
+---
+
+<section id="latest" class="bg-background relative z-10 overflow-hidden">
+    <div
+        aria-hidden="true"
+        class="paper-grain pointer-events-none absolute inset-0 z-1 select-none"
+    >
+    </div>
+
+    <div
+        class="relative z-10 mx-auto grid w-full max-w-360 lg:grid-cols-[42%_58%]"
+    >
+        <div
+            class="flex flex-col justify-center px-6 py-14 sm:px-10 lg:py-20 lg:pr-12 xl:px-16"
+        >
+            <span
+                class="latest-fade text-accent mb-4 block text-xs font-medium tracking-[0.2em] uppercase"
+                >{eyebrow}</span
+            >
+            <h2
+                class="latest-fade text-text mb-10 text-[clamp(1.75rem,2.9vw,2.75rem)] leading-[1.2] font-medium tracking-normal"
+            >
+                {heading}
+            </h2>
+
+            <ul class="flex flex-col">
+                {
+                    articles.map((article, index) => (
+                        <li class="latest-fade border-border border-t first:border-t-0">
+                            <a
+                                href={article.href}
+                                class="latest-item group relative flex items-center justify-between gap-6 px-1 py-6"
+                            >
+                                <div
+                                    aria-hidden="true"
+                                    class="latest-image pointer-events-none absolute inset-0 overflow-hidden bg-cover bg-center opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-35"
+                                    style={`background-image:url(${article.image})`}
+                                />
+
+                                <div class="relative z-10 flex items-baseline gap-5">
+                                    <span class="text-text-secondary/50 text-sm font-medium tabular-nums">
+                                        {String(index + 1).padStart(2, "0")}
+                                    </span>
+                                    <div>
+                                        <h3 class="text-text group-hover:text-accent text-base font-medium transition-colors sm:text-lg">
+                                            {article.title}
+                                        </h3>
+                                        <span class="text-text-secondary mt-1 block text-xs">
+                                            {article.readingTime}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <span
+                                    aria-hidden="true"
+                                    class="text-text-secondary/60 group-hover:text-text relative z-10 shrink-0 text-lg transition-all duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                                >
+                                    ↗
+                                </span>
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+
+        <div
+            class="flex flex-col items-center justify-center px-6 py-14 text-center sm:px-10 sm:py-16 lg:py-20 xl:px-16"
+        >
+            <h3
+                class="latest-fade text-text mb-10 text-[clamp(1.5rem,2.4vw,2.25rem)] leading-[1.2] font-medium tracking-normal"
+            >
+                {statsHeading}
+            </h3>
+
+            <div
+                class="latest-fade grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4 sm:gap-x-6"
+            >
+                {
+                    stats.map((stat, index) => (
+                        <StatCounter
+                            client:visible
+                            {...stat}
+                            delay={index * 0.1}
+                        />
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .latest-image {
+            filter: grayscale(0.7);
+            -webkit-mask-image:
+                linear-gradient(
+                    to right,
+                    transparent 0%,
+                    black 12%,
+                    black 88%,
+                    transparent 100%
+                ),
+                linear-gradient(
+                    to bottom,
+                    transparent 0%,
+                    black 15%,
+                    black 85%,
+                    transparent 100%
+                );
+            mask-image:
+                linear-gradient(
+                    to right,
+                    transparent 0%,
+                    black 12%,
+                    black 88%,
+                    transparent 100%
+                ),
+                linear-gradient(
+                    to bottom,
+                    transparent 0%,
+                    black 15%,
+                    black 85%,
+                    transparent 100%
+                );
+            -webkit-mask-composite: source-in;
+            mask-composite: intersect;
+        }
+    </style>
+
+    <script>
+        import { inView, animate, stagger } from "motion";
+
+        const prefersReducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        function initLatestReveal() {
+            const section = document.querySelector("#latest");
+            if (!section) return;
+
+            const fades: HTMLElement[] = [];
+            section.querySelectorAll(".latest-fade").forEach((el) => {
+                if (el instanceof HTMLElement) fades.push(el);
+            });
+
+            if (prefersReducedMotion) {
+                fades.forEach((el) => {
+                    el.style.opacity = "1";
+                    el.style.transform = "none";
+                });
+                return;
+            }
+
+            fades.forEach((el) => {
+                el.style.opacity = "0";
+                el.style.transform = "translateY(18px)";
+                el.style.willChange = "transform, opacity";
+            });
+
+            let played = false;
+
+            inView(
+                section,
+                () => {
+                    if (played) return;
+                    played = true;
+
+                    const animation = animate(
+                        fades,
+                        { y: [18, 0], opacity: [0, 1] },
+                        {
+                            duration: 0.7,
+                            delay: stagger(0.08, { startDelay: 0.1 }),
+                            ease: [0.22, 1, 0.36, 1],
+                        }
+                    );
+
+                    animation.then(() => {
+                        fades.forEach((el) => {
+                            el.style.willChange = "auto";
+                        });
+                    });
+                },
+                {
+                    margin: "0px 0px -12% 0px",
+                    amount: 0.2,
+                }
+            );
+        }
+
+        initLatestReveal();
+    </script>
+</section>
