@@ -46,14 +46,16 @@ const year = new Date().getFullYear();
             <p class="text-text-secondary">Montería, Colombia · Desde 2026</p>
         </div>
 
-        <div class="footer-fade flex flex-col gap-4">
-            <span class="text-accent text-xs font-medium uppercase">
+        <div class="flex flex-col gap-4">
+            <span
+                class="footer-fade text-accent text-xs font-medium uppercase"
+            >
                 Navegar
             </span>
             <ul class="flex flex-col gap-3">
                 {
                     exploreLinks.map((link) => (
-                        <li>
+                        <li class="footer-link-item">
                             <a
                                 href={link.href}
                                 class="text-text-secondary hover:text-text border-b border-transparent text-sm font-medium transition-colors duration-200 hover:border-stone-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-stone-900"
@@ -66,14 +68,16 @@ const year = new Date().getFullYear();
             </ul>
         </div>
 
-        <div class="footer-fade flex flex-col gap-4">
-            <span class="text-accent text-xs font-medium uppercase">
+        <div class="flex flex-col gap-4">
+            <span
+                class="footer-fade text-accent text-xs font-medium uppercase"
+            >
                 Encuentrame
             </span>
             <ul class="flex flex-col gap-3">
                 {
                     socialLinks.map((link) => (
-                        <li>
+                        <li class="footer-link-item">
                             <a
                                 href={link.href}
                                 target="_blank"
@@ -179,6 +183,9 @@ const year = new Date().getFullYear();
                         letters.forEach((el) => {
                             el.style.willChange = "auto";
                         });
+                        document.dispatchEvent(
+                            new CustomEvent("axiom:outro-reveal-done")
+                        );
                     });
                 },
                 {
@@ -186,6 +193,107 @@ const year = new Date().getFullYear();
                     amount: 0.3,
                 }
             );
+        }
+
+        function initAxiomOutroScramble() {
+            const wordmark = document.querySelector(".axiom-wordmark");
+            if (!wordmark) return;
+
+            const letters: HTMLElement[] = [];
+            wordmark.querySelectorAll(".axiom-letter").forEach((el) => {
+                if (el instanceof HTMLElement) letters.push(el);
+            });
+            if (!letters.length) return;
+
+            if (prefersReducedMotion) {
+                // Skip the char-cycle entirely; a subtle opacity pulse keeps
+                // hover feedback without the flashing-text motion.
+                wordmark.addEventListener("mouseenter", () => {
+                    animate(
+                        letters,
+                        { opacity: [1, 0.6, 1] },
+                        { duration: 0.4, delay: stagger(0.02) }
+                    );
+                });
+                return;
+            }
+
+            const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const CYCLE_INTERVAL_MS = 40;
+            const SETTLE_STEP_MS = 60;
+
+            let revealDone = false;
+            document.addEventListener("axiom:outro-reveal-done", () => {
+                revealDone = true;
+            });
+
+            let activeTimers: ReturnType<typeof setInterval>[] = [];
+            let activeTimeouts: ReturnType<typeof setTimeout>[] = [];
+            let scrambling = false;
+
+            function clearAll() {
+                activeTimers.forEach(clearInterval);
+                activeTimeouts.forEach(clearTimeout);
+                activeTimers = [];
+                activeTimeouts = [];
+            }
+
+            function randomChar() {
+                return SCRAMBLE_CHARS[
+                    Math.floor(Math.random() * SCRAMBLE_CHARS.length)
+                ];
+            }
+
+            function scrambleLetter(
+                el: HTMLElement,
+                finalChar: string,
+                settleDelay: number
+            ) {
+                if (!finalChar.trim()) return;
+
+                const timer = setInterval(() => {
+                    el.textContent = randomChar();
+                }, CYCLE_INTERVAL_MS);
+                activeTimers.push(timer);
+
+                const timeout = setTimeout(() => {
+                    clearInterval(timer);
+                    el.textContent = finalChar;
+                }, settleDelay);
+                activeTimeouts.push(timeout);
+            }
+
+            function runScramble() {
+                if (!revealDone || scrambling) return;
+                scrambling = true;
+                clearAll();
+
+                letters.forEach((el, index) => {
+                    const finalChar = el.dataset.finalChar ?? el.textContent ?? "";
+                    if (!el.dataset.finalChar) el.dataset.finalChar = finalChar;
+
+                    const settleDelay = 220 + index * SETTLE_STEP_MS;
+                    scrambleLetter(el, finalChar, settleDelay);
+                });
+
+                const totalDuration = 220 + letters.length * SETTLE_STEP_MS;
+                const doneTimeout = setTimeout(() => {
+                    scrambling = false;
+                }, totalDuration);
+                activeTimeouts.push(doneTimeout);
+            }
+
+            function resetScramble() {
+                clearAll();
+                letters.forEach((el) => {
+                    const finalChar = el.dataset.finalChar ?? el.textContent ?? "";
+                    el.textContent = finalChar;
+                });
+                scrambling = false;
+            }
+
+            wordmark.addEventListener("mouseenter", runScramble);
+            wordmark.addEventListener("mouseleave", resetScramble);
         }
 
         function initFooterReveal() {
@@ -244,7 +352,64 @@ const year = new Date().getFullYear();
             );
         }
 
+        function initFooterLinksReveal() {
+            const footer = document.querySelector("footer");
+            if (!footer) return;
+
+            const items: HTMLElement[] = [];
+            footer.querySelectorAll(".footer-link-item").forEach((el) => {
+                if (el instanceof HTMLElement) items.push(el);
+            });
+            if (!items.length) return;
+
+            if (prefersReducedMotion) {
+                items.forEach((el) => {
+                    el.style.opacity = "1";
+                    el.style.transform = "none";
+                });
+                return;
+            }
+
+            items.forEach((el) => {
+                el.style.opacity = "0";
+                el.style.transform = "translateY(14px)";
+                el.style.willChange = "transform, opacity";
+            });
+
+            let played = false;
+
+            inView(
+                footer,
+                () => {
+                    if (played) return;
+                    played = true;
+
+                    const animation = animate(
+                        items,
+                        { y: [14, 0], opacity: [0, 1] },
+                        {
+                            duration: 0.55,
+                            delay: stagger(0.06, { startDelay: 0.15 }),
+                            ease: [0.22, 1, 0.36, 1],
+                        }
+                    );
+
+                    animation.then(() => {
+                        items.forEach((el) => {
+                            el.style.willChange = "auto";
+                        });
+                    });
+                },
+                {
+                    margin: "0px 0px -10% 0px",
+                    amount: 0.2,
+                }
+            );
+        }
+
         initFooterReveal();
+        initFooterLinksReveal();
         initAxiomOutroReveal();
+        initAxiomOutroScramble();
     </script>
 </footer>

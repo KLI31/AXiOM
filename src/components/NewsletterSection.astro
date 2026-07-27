@@ -35,9 +35,13 @@ const microcopy = [
             >
 
             <h2
-                class="newsletter-fade text-text text-[clamp(1.75rem,2.9vw,2.75rem)] leading-[1.2] font-medium tracking-normal"
+                class="text-text text-[clamp(1.75rem,2.9vw,2.75rem)] leading-[1.2] font-medium tracking-normal"
             >
-                {headlineLines.map((line) => <span class="block">{line}</span>)}
+                {
+                    headlineLines.map((line) => (
+                        <span class="newsletter-fade block">{line}</span>
+                    ))
+                }
             </h2>
 
             <div class="mt-3 space-y-1">
@@ -173,24 +177,88 @@ const microcopy = [
             "(prefers-reduced-motion: reduce)"
         ).matches;
 
+        interface WordPair {
+            mask: HTMLSpanElement;
+            word: HTMLSpanElement;
+        }
+
+        // Splits any plain-text element into individually masked word spans
+        // so each word can rise on its own within its container.
+        function splitElementIntoWords(element: HTMLElement): WordPair[] {
+            const text = element.textContent ?? "";
+            element.textContent = "";
+
+            const pairs: WordPair[] = [];
+            const words = text.split(/\s+/).filter(Boolean);
+
+            words.forEach((wordText, index) => {
+                const mask = document.createElement("span");
+                mask.style.display = "inline-block";
+                mask.style.overflow = "hidden";
+                mask.style.verticalAlign = "bottom";
+
+                const word = document.createElement("span");
+                word.style.display = "inline-block";
+                word.textContent = wordText;
+
+                mask.appendChild(word);
+                element.appendChild(mask);
+                if (index < words.length - 1) {
+                    element.appendChild(document.createTextNode(" "));
+                }
+                pairs.push({ mask, word });
+            });
+
+            return pairs;
+        }
+
         function initNewsletterReveal() {
             const section = document.querySelector("#newsletter");
             if (!section) return;
 
-            const fades: HTMLElement[] = [];
-            section.querySelectorAll(".newsletter-fade").forEach((el) => {
-                if (el instanceof HTMLElement) fades.push(el);
+            const label = section.querySelector("span.newsletter-fade");
+            const form = section.querySelector(".newsletter-form");
+            const headlineSpans: HTMLElement[] = [];
+            section.querySelectorAll("h2 span.newsletter-fade").forEach((el) => {
+                if (el instanceof HTMLElement) headlineSpans.push(el);
+            });
+            const microcopyParagraphs: HTMLElement[] = [];
+            section.querySelectorAll("p.newsletter-fade").forEach((el) => {
+                if (el instanceof HTMLElement) microcopyParagraphs.push(el);
             });
 
+            const simpleFades: HTMLElement[] = [];
+            if (label instanceof HTMLElement) simpleFades.push(label);
+            if (form instanceof HTMLElement) simpleFades.push(form);
+            const wordTargets = [...headlineSpans, ...microcopyParagraphs];
+
             if (prefersReducedMotion) {
-                fades.forEach((el) => {
+                simpleFades.forEach((el) => {
+                    el.style.opacity = "1";
+                    el.style.transform = "none";
+                });
+                wordTargets.forEach((el) => {
                     el.style.opacity = "1";
                     el.style.transform = "none";
                 });
                 return;
             }
 
-            fades.forEach((el) => {
+            const headlineWordPairs: WordPair[] = [];
+            headlineSpans.forEach((el) => {
+                headlineWordPairs.push(...splitElementIntoWords(el));
+            });
+            const microcopyWordPairs: WordPair[] = [];
+            microcopyParagraphs.forEach((el) => {
+                microcopyWordPairs.push(...splitElementIntoWords(el));
+            });
+
+            [...headlineWordPairs, ...microcopyWordPairs].forEach(({ word }) => {
+                word.style.opacity = "0";
+                word.style.transform = "translateY(110%)";
+            });
+
+            simpleFades.forEach((el) => {
                 el.style.opacity = "0";
                 el.style.transform = "translateY(18px)";
                 el.style.willChange = "transform, opacity";
@@ -204,21 +272,61 @@ const microcopy = [
                     if (played) return;
                     played = true;
 
-                    const animation = animate(
-                        fades,
-                        { y: [18, 0], opacity: [0, 1] },
-                        {
-                            duration: 0.7,
-                            delay: stagger(0.09, { startDelay: 0.1 }),
-                            ease: [0.22, 1, 0.36, 1],
-                        }
-                    );
-
-                    animation.then(() => {
-                        fades.forEach((el) => {
-                            el.style.willChange = "auto";
+                    if (label instanceof HTMLElement) {
+                        const labelAnimation = animate(
+                            label,
+                            { y: [18, 0], opacity: [0, 1] },
+                            { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
+                        );
+                        labelAnimation.then(() => {
+                            label.style.willChange = "auto";
                         });
-                    });
+                    }
+
+                    if (headlineWordPairs.length) {
+                        const headlineWords = headlineWordPairs.map(
+                            ({ word }) => word
+                        );
+                        animate(
+                            headlineWords,
+                            { y: ["110%", "0%"], opacity: [0, 1] },
+                            {
+                                duration: 0.7,
+                                delay: stagger(0.035, { startDelay: 0.15 }),
+                                ease: [0.22, 1, 0.36, 1],
+                            }
+                        );
+                    }
+
+                    if (microcopyWordPairs.length) {
+                        const microcopyWords = microcopyWordPairs.map(
+                            ({ word }) => word
+                        );
+                        animate(
+                            microcopyWords,
+                            { y: ["110%", "0%"], opacity: [0, 1] },
+                            {
+                                duration: 0.6,
+                                delay: stagger(0.02, { startDelay: 0.5 }),
+                                ease: [0.22, 1, 0.36, 1],
+                            }
+                        );
+                    }
+
+                    if (form instanceof HTMLElement) {
+                        const formAnimation = animate(
+                            form,
+                            { y: [18, 0], opacity: [0, 1] },
+                            {
+                                duration: 0.6,
+                                delay: 0.65,
+                                ease: [0.22, 1, 0.36, 1],
+                            }
+                        );
+                        formAnimation.then(() => {
+                            form.style.willChange = "auto";
+                        });
+                    }
                 },
                 {
                     margin: "0px 0px -12% 0px",

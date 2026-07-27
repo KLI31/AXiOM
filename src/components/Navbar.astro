@@ -7,11 +7,17 @@ const navLinks = [
 ---
 
 <header
-    class="site-header pointer-events-none fixed inset-x-0 top-0 z-50 h-28 bg-linear-to-b from-[#f6f1ec] via-[#f6f1ec]/75 to-transparent"
+    class="site-header pointer-events-none fixed inset-x-0 top-0 z-50 h-28"
     style="opacity: 0; transform: translateY(-12px);"
 >
+    <div
+        aria-hidden="true"
+        class="site-header-bg pointer-events-none absolute inset-0 bg-linear-to-b from-[#f6f1ec] via-[#f6f1ec]/75 to-transparent"
+    >
+    </div>
+
     <nav
-        class="pointer-events-auto mx-auto flex h-20 max-w-360 items-center justify-between px-6 sm:px-10 lg:px-12 xl:px-16"
+        class="pointer-events-auto relative mx-auto flex h-20 max-w-360 items-center justify-between px-6 sm:px-10 lg:px-12 xl:px-16"
         aria-label="Navegación principal"
     >
         <a href="/" class="navbar-logo flex items-center gap-2.5">
@@ -23,9 +29,17 @@ const navLinks = [
                 class="mix-blend-multiply"
             />
             <span
-                class="mb-1 text-base font-semibold tracking-[0.24em] text-stone-900 uppercase"
+                class="navbar-logo-text mb-1 flex text-base font-semibold tracking-[0.24em] text-stone-900 uppercase"
             >
-                Axiom
+                {
+                    "AXIOM".split("").map((letter) => (
+                        <span class="navbar-logo-letter-mask inline-block overflow-hidden">
+                            <span class="navbar-logo-letter inline-block">
+                                {letter}
+                            </span>
+                        </span>
+                    ))
+                }
             </span>
         </a>
 
@@ -36,9 +50,12 @@ const navLinks = [
                         <a
                             href={link.href}
                             class="navbar-link border-b border-transparent py-2 text-sm font-medium text-stone-700 transition-colors duration-200 hover:border-stone-900 hover:text-stone-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-stone-900"
-                            style="opacity: 0; transform: translateY(-8px);"
                         >
-                            {link.label}
+                            <span class="navbar-link-mask inline-block overflow-hidden">
+                                <span class="navbar-link-inner inline-block">
+                                    {link.label}
+                                </span>
+                            </span>
                         </a>
                     </li>
                 ))
@@ -49,8 +66,7 @@ const navLinks = [
 
 <noscript>
     <style>
-        .site-header,
-        .navbar-link {
+        .site-header {
             opacity: 1 !important;
             transform: none !important;
         }
@@ -63,35 +79,58 @@ const navLinks = [
     const prefersReducedMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)"
     ).matches;
-    const header = document.querySelector(".site-header");
-    const links = document.querySelectorAll(".navbar-link");
 
-    if (header) {
+    const header = document.querySelector(".site-header");
+    const logoLetters = document.querySelectorAll(".navbar-logo-letter");
+    const linkInners = document.querySelectorAll(".navbar-link-inner");
+
+    if (header instanceof HTMLElement) {
         if (prefersReducedMotion) {
-            (header as HTMLElement).style.opacity = "1";
-            (header as HTMLElement).style.transform = "none";
-            links.forEach((link) => {
-                (link as HTMLElement).style.opacity = "1";
-                (link as HTMLElement).style.transform = "none";
+            header.style.opacity = "1";
+            header.style.transform = "none";
+            logoLetters.forEach((el) => {
+                if (el instanceof HTMLElement) el.style.transform = "none";
+            });
+            linkInners.forEach((el) => {
+                if (el instanceof HTMLElement) el.style.transform = "none";
             });
         } else {
+            logoLetters.forEach((el) => {
+                if (el instanceof HTMLElement) {
+                    el.style.transform = "translateY(100%)";
+                }
+            });
+            linkInners.forEach((el) => {
+                if (el instanceof HTMLElement) {
+                    el.style.transform = "translateY(110%)";
+                }
+            });
+
             animate(
                 header,
                 { opacity: 1, y: 0 },
-                {
-                    duration: 0.7,
-                    delay: 0.1,
-                    ease: [0.22, 1, 0.36, 1],
-                }
+                { duration: 1.0, delay: 0.2, ease: [0.22, 1, 0.36, 1] }
             );
 
-            if (links.length) {
+            if (logoLetters.length) {
                 animate(
-                    links,
-                    { opacity: 1, y: 0 },
+                    logoLetters,
+                    { y: ["100%", "0%"] },
                     {
-                        duration: 0.5,
-                        delay: stagger(0.05, { startDelay: 0.35 }),
+                        duration: 0.7,
+                        delay: stagger(0.04, { startDelay: 0.35 }),
+                        ease: [0.22, 1, 0.36, 1],
+                    }
+                );
+            }
+
+            if (linkInners.length) {
+                animate(
+                    linkInners,
+                    { y: ["110%", "0%"] },
+                    {
+                        duration: 0.7,
+                        delay: stagger(0.08, { startDelay: 0.55 }),
                         ease: [0.22, 1, 0.36, 1],
                     }
                 );

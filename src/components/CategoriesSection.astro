@@ -38,15 +38,6 @@ const categories = [
 ---
 
 <section class="bg-background relative z-10 overflow-hidden py-16 sm:py-24">
-    <img
-        src="/logo.png"
-        alt=""
-        aria-hidden="true"
-        loading="lazy"
-        decoding="async"
-        class="pointer-events-none absolute -bottom-[14rem] -left-[10rem] z-1 w-[40rem] rotate-12 opacity-[0.025] mix-blend-multiply select-none lg:-bottom-[18rem] lg:-left-[14rem] lg:w-[50rem]"
-    />
-
     <div
         aria-hidden="true"
         class="paper-grain pointer-events-none absolute inset-0 z-2 select-none"
@@ -70,8 +61,8 @@ const categories = [
 
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {
-                categories.map((category) => (
-                    <CategoryCard client:visible {...category} />
+                categories.map((category, index) => (
+                    <CategoryCard client:visible index={index} {...category} />
                 ))
             }
         </div>
