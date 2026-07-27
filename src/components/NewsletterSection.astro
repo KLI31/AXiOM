@@ -1,0 +1,309 @@
+---
+const label = "Newsletter";
+const headlineLines = ["Ideas que llegan", "antes que el algoritmo."];
+const microcopy = [
+    "Un correo semanal.",
+    "Sin spam.",
+    "Solo contenido que vale la pena leer.",
+];
+---
+
+<section
+    id="newsletter"
+    class="border-border bg-background relative z-10 overflow-hidden"
+>
+    <div
+        aria-hidden="true"
+        class="newsletter-halftone pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[28%] select-none sm:block"
+    >
+        <div class="newsletter-halftone-dense"></div>
+    </div>
+
+    <div
+        class="relative z-10 mx-auto grid w-full max-w-360 gap-10 px-6 py-14 sm:px-10 lg:grid-cols-[36%_64%] lg:gap-16 lg:py-16 lg:pr-[26%] xl:px-16"
+    >
+        <div class="flex flex-col justify-center">
+            <span
+                class="newsletter-fade text-accent mb-6 block text-xs font-medium tracking-[0.2em] uppercase"
+                >{label}</span
+            >
+
+            <h2
+                class="newsletter-fade text-text text-[clamp(1.75rem,2.9vw,2.75rem)] leading-[1.2] font-medium tracking-normal"
+            >
+                {headlineLines.map((line) => <span class="block">{line}</span>)}
+            </h2>
+
+            <div class="mt-3 space-y-1">
+                {
+                    microcopy.map((line) => (
+                        <p class="newsletter-fade text-text-secondary text-sm leading-[1.6]">
+                            {line}
+                        </p>
+                    ))
+                }
+            </div>
+        </div>
+
+        <div class="flex flex-col justify-center">
+            <form
+                class="newsletter-fade newsletter-form flex w-full flex-col gap-3 sm:flex-row"
+            >
+                <input
+                    type="email"
+                    name="email"
+                    required
+                    placeholder="Tu correo electrónico"
+                    class="border-border bg-background text-text placeholder:text-text-secondary focus:border-accent h-12 flex-1 border px-5 text-base outline-none"
+                />
+                <button
+                    type="submit"
+                    class="newsletter-btn bg-text text-background hover:bg-text/90 relative flex h-12 shrink-0 items-center justify-center gap-2 overflow-hidden px-6 font-medium transition-colors"
+                >
+                    <span
+                        class="newsletter-btn-text inline-block overflow-hidden whitespace-nowrap"
+                        >Suscribirme</span
+                    >
+                    <span
+                        class="newsletter-btn-icon flex h-5 w-5 shrink-0 items-center justify-center"
+                    >
+                        <svg
+                            viewBox="0 0 16 16"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="h-4 w-4"
+                        >
+                            <path d="M3 8h10M9 4l4 4-4 4"></path>
+                        </svg>
+                    </span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        /* Halftone dither panel: three stacked dot layers, each larger and
+           masked to reveal later along the x-axis, so density visually
+           grows from sparse (left edge) to near-solid black (right edge). */
+        .newsletter-halftone {
+            background: transparent;
+        }
+
+        .newsletter-halftone::before,
+        .newsletter-halftone::after,
+        .newsletter-halftone > .newsletter-halftone-dense {
+            content: "";
+            position: absolute;
+            inset: 0;
+        }
+
+        .newsletter-halftone::before {
+            background-image: radial-gradient(
+                circle,
+                rgb(17 17 17 / 0.55) 1.1px,
+                transparent 1.4px
+            );
+            background-size: 7px 7px;
+            -webkit-mask-image: linear-gradient(
+                to right,
+                transparent 0%,
+                black 55%
+            );
+            mask-image: linear-gradient(to right, transparent 0%, black 55%);
+        }
+
+        .newsletter-halftone::after {
+            background-image: radial-gradient(
+                circle,
+                rgb(17 17 17 / 0.75) 1.9px,
+                transparent 2.3px
+            );
+            background-size: 10px 10px;
+            background-position: 3px 5px;
+            -webkit-mask-image: linear-gradient(
+                to right,
+                transparent 0%,
+                transparent 35%,
+                black 75%
+            );
+            mask-image: linear-gradient(
+                to right,
+                transparent 0%,
+                transparent 35%,
+                black 75%
+            );
+        }
+
+        .newsletter-halftone-dense {
+            background-image: radial-gradient(
+                circle,
+                rgb(17 17 17 / 0.92) 3px,
+                transparent 3.6px
+            );
+            background-size: 13px 13px;
+            background-position: 6px 8px;
+            -webkit-mask-image: linear-gradient(
+                to right,
+                transparent 0%,
+                transparent 65%,
+                black 100%
+            );
+            mask-image: linear-gradient(
+                to right,
+                transparent 0%,
+                transparent 65%,
+                black 100%
+            );
+        }
+    </style>
+
+    <script>
+        import { inView, animate } from "motion";
+
+        const prefersReducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        function initNewsletterReveal() {
+            const section = document.querySelector("#newsletter");
+            if (!section) return;
+
+            const fades: HTMLElement[] = [];
+            section.querySelectorAll(".newsletter-fade").forEach((el) => {
+                if (el instanceof HTMLElement) fades.push(el);
+            });
+
+            if (prefersReducedMotion) {
+                fades.forEach((el) => {
+                    el.style.opacity = "1";
+                    el.style.transform = "none";
+                });
+                return;
+            }
+
+            fades.forEach((el) => {
+                el.style.opacity = "0";
+                el.style.transform = "translateY(18px)";
+                el.style.willChange = "transform, opacity";
+            });
+
+            let played = false;
+
+            inView(
+                section,
+                () => {
+                    if (played) return;
+                    played = true;
+
+                    const animation = animate(
+                        fades,
+                        { y: [18, 0], opacity: [0, 1] },
+                        {
+                            duration: 0.7,
+                            delay: 0.1,
+                            stagger: 0.09,
+                            ease: [0.22, 1, 0.36, 1],
+                        }
+                    );
+
+                    animation.then(() => {
+                        fades.forEach((el) => {
+                            el.style.willChange = "auto";
+                        });
+                    });
+                },
+                {
+                    margin: "0px 0px -12% 0px",
+                    amount: 0.2,
+                }
+            );
+        }
+
+        function initNewsletterSubmit() {
+            const section = document.querySelector("#newsletter");
+            if (!section) return;
+
+            const form = section.querySelector(".newsletter-form");
+            const button = section.querySelector(".newsletter-btn");
+
+            if (!(form instanceof HTMLFormElement)) return;
+            if (!(button instanceof HTMLButtonElement)) return;
+
+            const textEl = button.querySelector(".newsletter-btn-text");
+            if (!(textEl instanceof HTMLElement)) return;
+
+            // Measure the button's natural (pill) state so we can animate
+            // real width/border-radius/gap values with `motion` instead of
+            // faking the shape with clip-path.
+            const restStyle = getComputedStyle(button);
+            const restWidth = button.getBoundingClientRect().width;
+            const restRadius = restStyle.borderRadius;
+            const restGap = restStyle.columnGap || restStyle.gap;
+            const circleSize = button.offsetHeight;
+            const textWidth = textEl.getBoundingClientRect().width;
+
+            button.style.width = `${restWidth}px`;
+            textEl.style.width = `${textWidth}px`;
+
+            let resetTimeout: ReturnType<typeof setTimeout> | null = null;
+            let sending = false;
+
+            form.addEventListener("submit", (event) => {
+                event.preventDefault();
+
+                if (prefersReducedMotion || sending) return;
+                sending = true;
+
+                if (resetTimeout) {
+                    clearTimeout(resetTimeout);
+                }
+
+                animate(
+                    button,
+                    {
+                        width: `${circleSize}px`,
+                        borderRadius: "999px",
+                        gap: "0px",
+                    },
+                    { duration: 0.4, ease: [0.65, 0, 0.35, 1] }
+                );
+                animate(
+                    textEl,
+                    { width: "0px", opacity: 0 },
+                    { duration: 0.3, ease: [0.65, 0, 0.35, 1] }
+                );
+
+                resetTimeout = setTimeout(() => {
+                    animate(
+                        button,
+                        {
+                            width: `${restWidth}px`,
+                            borderRadius: restRadius,
+                            gap: restGap,
+                        },
+                        { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
+                    );
+                    const revealAnimation = animate(
+                        textEl,
+                        { width: `${textWidth}px`, opacity: 1 },
+                        {
+                            duration: 0.35,
+                            delay: 0.05,
+                            ease: [0.22, 1, 0.36, 1],
+                        }
+                    );
+                    revealAnimation.then(() => {
+                        sending = false;
+                    });
+                    resetTimeout = null;
+                }, 1200);
+            });
+        }
+
+        initNewsletterReveal();
+        initNewsletterSubmit();
+    </script>
+</section>
