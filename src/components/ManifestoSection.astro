@@ -39,7 +39,7 @@ const practices = [
             >
 
             <h2
-                class="text-text text-[clamp(2rem,3.4vw,3.5rem)] leading-[1.08] font-normal tracking-[-0.03em]"
+                class="manifesto-statement text-text text-[clamp(2rem,3.4vw,3.5rem)] leading-[1.08] font-normal tracking-[-0.03em]"
             >
                 {
                     statement.map((line) => (
@@ -93,14 +93,14 @@ const practices = [
             </div>
 
             <p
-                class="manifesto-fade text-text mb-10 max-w-[22ch] text-xl leading-[1.45] tracking-[-0.015em] sm:text-2xl"
+                class="manifesto-lede text-text mb-10 max-w-[22ch] text-xl leading-[1.45] tracking-[-0.015em] sm:text-2xl"
             >
                 {lede}
             </p>
 
             {
                 practices.map((practice) => (
-                    <p class="manifesto-fade text-text-secondary mb-5 max-w-[26ch] text-base leading-[1.7] last:mb-0 sm:text-lg">
+                    <p class="manifesto-practice text-text-secondary mb-5 max-w-[26ch] text-base leading-[1.7] last:mb-0 sm:text-lg">
                         {practice}
                     </p>
                 ))
@@ -109,9 +109,8 @@ const practices = [
             <p
                 class="manifesto-fade text-text mt-10 max-w-[26ch] text-base leading-[1.7] sm:text-lg"
             >
-                Creamos más valor.
-                <strong class="font-semibold tracking-[0.08em]">AXIOM</strong>
-                <span aria-hidden="true" class="text-accent">↗</span>
+                Creamos más valor en
+                <strong class="font-semibold tracking-[0.08em]"> AXIOM</strong>
             </p>
         </div>
     </div>
@@ -165,11 +164,11 @@ const practices = [
             word: HTMLSpanElement;
         }
 
-        // Splits a line's text into individually masked word spans so each
-        // word can rise on its own within the line.
-        function splitLineIntoWords(inner: HTMLElement): WordPair[] {
-            const text = inner.textContent ?? "";
-            inner.textContent = "";
+        // Splits any plain-text element into individually masked word spans
+        // so each word can rise on its own within its container.
+        function splitElementIntoWords(element: HTMLElement): WordPair[] {
+            const text = element.textContent ?? "";
+            element.textContent = "";
 
             const pairs: WordPair[] = [];
             const words = text.split(/\s+/).filter(Boolean);
@@ -185,14 +184,57 @@ const practices = [
                 word.textContent = wordText;
 
                 mask.appendChild(word);
-                inner.appendChild(mask);
+                element.appendChild(mask);
                 if (index < words.length - 1) {
-                    inner.appendChild(document.createTextNode(" "));
+                    element.appendChild(document.createTextNode(" "));
                 }
                 pairs.push({ mask, word });
             });
 
             return pairs;
+        }
+
+        // Reveals each word of a text block as its container scrolls through
+        // the viewport. Uses a single scroll listener per block to keep
+        // performance high, then interpolates opacity/transform per word.
+        function createScrollWordReveal(
+            block: HTMLElement,
+            pairs: WordPair[]
+        ): (() => void) | undefined {
+            if (!pairs.length) return undefined;
+
+            const items = pairs.map((pair, index) => ({
+                ...pair,
+                start: index / pairs.length,
+                end: (index + 1) / pairs.length,
+            }));
+
+            return scroll(
+                (progress) => {
+                    items.forEach(({ mask, word, start, end }) => {
+                        const local = Math.min(
+                            Math.max((progress - start) / (end - start), 0),
+                            1
+                        );
+
+                        word.style.opacity = String(local);
+                        word.style.transform = `translateY(${110 * (1 - local)}%)`;
+
+                        if (local > 0.99 && mask.style.overflow !== "visible") {
+                            mask.style.overflow = "visible";
+                        } else if (
+                            local <= 0.99 &&
+                            mask.style.overflow !== "hidden"
+                        ) {
+                            mask.style.overflow = "hidden";
+                        }
+                    });
+                },
+                {
+                    target: block,
+                    offset: ["start 85%", "start 35%"],
+                }
+            );
         }
 
         function initManifestoAnimations() {
@@ -203,6 +245,8 @@ const practices = [
             const lineInners = section.querySelectorAll(
                 ".manifesto-line-inner"
             );
+            const ledeEl = section.querySelector(".manifesto-lede");
+            const practiceEls = section.querySelectorAll(".manifesto-practice");
             const media = section.querySelector(".manifesto-media");
             const parallaxLayer = section.querySelector(".manifesto-parallax");
             const image = section.querySelector(".manifesto-image");
@@ -223,6 +267,16 @@ const practices = [
                     el.style.opacity = "1";
                     el.style.transform = "none";
                 });
+                if (ledeEl instanceof HTMLElement) {
+                    ledeEl.style.opacity = "1";
+                    ledeEl.style.transform = "none";
+                }
+                practiceEls.forEach((el) => {
+                    if (el instanceof HTMLElement) {
+                        el.style.opacity = "1";
+                        el.style.transform = "none";
+                    }
+                });
                 if (rule instanceof HTMLElement) rule.style.transform = "none";
                 if (media instanceof HTMLElement) media.style.clipPath = "none";
                 if (image instanceof HTMLElement)
@@ -230,12 +284,23 @@ const practices = [
                 return;
             }
 
-            // Split the statement into words only when we will animate, so the
+            // Split text blocks into words only when we will animate, so the
             // plain markup stays untouched for no-JS / reduced-motion users.
-            const wordPairs: WordPair[] = [];
+            const statementWordPairs: WordPair[] = [];
             lineInners.forEach((inner) => {
                 if (!(inner instanceof HTMLElement)) return;
-                wordPairs.push(...splitLineIntoWords(inner));
+                statementWordPairs.push(...splitElementIntoWords(inner));
+            });
+
+            const ledeWordPairs: WordPair[] =
+                ledeEl instanceof HTMLElement
+                    ? splitElementIntoWords(ledeEl)
+                    : [];
+
+            const practiceWordPairs: WordPair[][] = [];
+            practiceEls.forEach((practice) => {
+                if (!(practice instanceof HTMLElement)) return;
+                practiceWordPairs.push(splitElementIntoWords(practice));
             });
 
             // Initial hidden states (only applied by JS, so content remains
@@ -246,10 +311,20 @@ const practices = [
                 quote.style.willChange = "transform, opacity";
             }
 
-            wordPairs.forEach(({ word }) => {
+            statementWordPairs.forEach(({ word }) => {
                 word.style.opacity = "0";
                 word.style.transform = "translateY(110%)";
-                word.style.willChange = "transform, opacity";
+            });
+
+            // Lede and practices word spans also start hidden for their
+            // scroll-driven reveals.
+            ledeWordPairs.forEach(({ word }) => {
+                word.style.opacity = "0";
+                word.style.transform = "translateY(110%)";
+            });
+            practiceWordPairs.flat().forEach(({ word }) => {
+                word.style.opacity = "0";
+                word.style.transform = "translateY(110%)";
             });
 
             fades.forEach((el) => {
@@ -295,15 +370,15 @@ const practices = [
                 );
             }
 
-            // 1. Statement: quote glyph first, then word-by-word masked rise.
-            if (quote instanceof HTMLElement && wordPairs.length) {
-                let statementPlayed = false;
+            // 1. Quote glyph reveal (one-shot, unchanged).
+            if (quote instanceof HTMLElement) {
+                let quotePlayed = false;
 
                 inView(
                     quote,
                     () => {
-                        if (statementPlayed) return;
-                        statementPlayed = true;
+                        if (quotePlayed) return;
+                        quotePlayed = true;
 
                         const quoteAnimation = animate(
                             quote,
@@ -313,22 +388,6 @@ const practices = [
                         quoteAnimation.then(() => {
                             quote.style.willChange = "auto";
                         });
-
-                        wordPairs.forEach(({ mask, word }, index) => {
-                            const wordAnimation = animate(
-                                word,
-                                { y: ["110%", "0%"], opacity: [0, 1] },
-                                {
-                                    duration: 0.8,
-                                    delay: 0.15 + index * 0.055,
-                                    ease: [0.22, 1, 0.36, 1],
-                                }
-                            );
-                            wordAnimation.then(() => {
-                                word.style.willChange = "auto";
-                                mask.style.overflow = "visible";
-                            });
-                        });
                     },
                     {
                         margin: "0px 0px -12% 0px",
@@ -336,6 +395,34 @@ const practices = [
                     }
                 );
             }
+
+            // Statement word reveal is now driven by scroll progress of the
+            // statement block itself, not by a one-shot inView trigger.
+            const statementBlock = section.querySelector(
+                ".manifesto-statement"
+            );
+            if (
+                statementBlock instanceof HTMLElement &&
+                statementWordPairs.length
+            ) {
+                createScrollWordReveal(statementBlock, statementWordPairs);
+            }
+
+            // Lede and practices: scroll-linked word reveal, each with its own
+            // target and independent progress.
+            const ledeBlock = section.querySelector(".manifesto-lede");
+            if (ledeBlock instanceof HTMLElement && ledeWordPairs.length) {
+                createScrollWordReveal(ledeBlock, ledeWordPairs);
+            }
+
+            practiceWordPairs.forEach((pairs, index) => {
+                const practiceBlock = practiceEls[index];
+                if (!(practiceBlock instanceof HTMLElement) || !pairs.length) {
+                    return;
+                }
+
+                createScrollWordReveal(practiceBlock, pairs);
+            });
 
             // 2. Center image: cinematic bottom-up clip reveal + settle scale.
             // Slightly delayed so the statement leads the choreography.
