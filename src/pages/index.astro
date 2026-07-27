@@ -3,6 +3,7 @@ import Welcome from "@/components/Welcome.astro";
 import Layout from "@/layouts/Layout.astro";
 import FeaturedArticle from "@/components/FeaturedArticle.astro";
 import CategoriesSection from "@/components/CategoriesSection.astro";
+import LatestArticlesSection from "@/components/LatestArticlesSection.astro";
 import ManifestoSection from "@/components/ManifestoSection.astro";
 import NewsletterSection from "@/components/NewsletterSection.astro";
 ---
@@ -10,7 +11,22 @@ import NewsletterSection from "@/components/NewsletterSection.astro";
 <Layout>
     <Welcome />
     <FeaturedArticle />
-    <CategoriesSection />
+    <div class="relative overflow-hidden">
+        <CategoriesSection />
+
+        <div class="relative z-20 h-0">
+            <img
+                src="/logo.png"
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                decoding="async"
+                class="pointer-events-none absolute -bottom-[14rem] -left-[10rem] w-[40rem] rotate-12 opacity-[0.025] mix-blend-multiply select-none lg:-bottom-[18rem] lg:-left-[14rem] lg:w-[50rem]"
+            />
+        </div>
+
+        <LatestArticlesSection />
+    </div>
     <ManifestoSection />
     <NewsletterSection />
 </Layout>
