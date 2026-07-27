@@ -14,104 +14,213 @@ const practices = [
     "Publicamos cuando tenemos algo que decir.",
     "No vendemos el algoritmo ni el póster.",
 ];
+
+const statementTwo = [
+    { text: "Entender no es", spacing: false },
+    { text: "opinar más rápido.", spacing: true },
+    { text: "Es quedarse", spacing: false },
+    { text: "el tiempo necesario.", spacing: false },
+];
+
+const ledeTwo =
+    "Por eso elegimos la pausa: menos titulares, más preguntas que se quedan.";
+
+const practicesTwo = [
+    "Investigamos antes de tener una opinión.",
+    "Corregimos en público cuando nos equivocamos.",
+    "Preferimos una idea completa a diez inconclusas.",
+];
 ---
 
-<section
-    id="manifiesto"
-    class="border-border bg-background relative z-10 overflow-hidden"
->
+<section id="manifiesto" class="border-border bg-background relative z-10">
     <div
         aria-hidden="true"
         class="paper-grain pointer-events-none absolute inset-0 z-2 select-none"
     >
     </div>
 
-    <div
-        class="relative mx-auto grid w-full max-w-360 gap-0 lg:min-h-screen lg:grid-cols-[32%_40%_28%]"
-    >
+    <div class="manifesto-pin-wrapper relative lg:h-[300vh]">
         <div
-            class="flex flex-col justify-center px-6 py-16 sm:px-10 lg:py-24 lg:pr-8 lg:pl-12 xl:pl-16"
-        >
-            <span
-                aria-hidden="true"
-                class="manifesto-quote text-text mb-12 block text-[5rem] leading-[0.75] font-medium select-none"
-                >«</span
-            >
-
-            <h2
-                class="manifesto-statement text-text text-[clamp(2rem,3.4vw,3.5rem)] leading-[1.08] font-normal tracking-[-0.03em]"
-            >
-                {
-                    statement.map((line) => (
-                        <span
-                            class:list={[
-                                "manifesto-line block",
-                                { "mb-8": line.spacing },
-                            ]}
-                        >
-                            <span class="manifesto-line-inner block">
-                                {line.text}
-                            </span>
-                        </span>
-                    ))
-                }
-            </h2>
-        </div>
-
-        <div
-            class="manifesto-media relative min-h-[55vh] overflow-hidden lg:min-h-0"
+            class="manifesto-pin-viewport lg:sticky lg:top-0 lg:h-screen lg:overflow-hidden"
         >
             <div
-                class="manifesto-parallax absolute inset-x-0 -top-[8%] flex h-[116%] items-center justify-center"
+                class="manifesto-act manifesto-act-one relative mx-auto grid w-full max-w-360 gap-8 lg:absolute lg:inset-0 lg:h-full lg:grid-cols-[32fr_40fr_28fr] lg:gap-10 xl:gap-14"
             >
                 <div
-                    aria-hidden="true"
-                    class="manifesto-image h-full w-full overflow-hidden"
+                    class="flex flex-col justify-center px-6 py-16 sm:px-10 lg:py-24 lg:pl-12 xl:pl-16"
                 >
-                    <img
-                        src="/section.png"
-                        alt=""
-                        class="h-full w-full object-cover opacity-45"
-                        loading="lazy"
-                        decoding="async"
-                    />
+                    <span
+                        aria-hidden="true"
+                        class="manifesto-quote text-text mb-12 block text-[5rem] leading-[0.75] font-medium select-none"
+                        >«</span
+                    >
+
+                    <h2
+                        class="manifesto-statement text-text text-[clamp(2rem,3.4vw,3.5rem)] leading-[1.08] font-normal tracking-[-0.03em]"
+                    >
+                        {
+                            statement.map((line) => (
+                                <span
+                                    class:list={[
+                                        "manifesto-line block",
+                                        { "mb-8": line.spacing },
+                                    ]}
+                                >
+                                    <span class="manifesto-line-inner block">
+                                        {line.text}
+                                    </span>
+                                </span>
+                            ))
+                        }
+                    </h2>
+                </div>
+
+                <div
+                    class="manifesto-media relative min-h-[55vh] overflow-hidden lg:min-h-0"
+                >
+                    <div
+                        class="manifesto-parallax absolute inset-x-0 -top-[8%] flex h-[116%] items-center justify-center"
+                    >
+                        <div
+                            aria-hidden="true"
+                            class="manifesto-image h-full w-full overflow-hidden"
+                        >
+                            <img
+                                src="/section.png"
+                                alt=""
+                                class="h-full w-full object-cover opacity-45"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="flex flex-col justify-center px-6 py-16 sm:px-10 lg:py-24 lg:pr-12 xl:pr-16"
+                >
+                    <div
+                        class="manifesto-label-row mb-10 flex items-center gap-4"
+                    >
+                        <span
+                            aria-hidden="true"
+                            class="manifesto-rule bg-accent block h-px w-10"
+                        ></span>
+                        <span
+                            class="manifesto-fade text-accent text-xs font-medium tracking-[0.2em] uppercase"
+                            >Nuestro manifiesto</span
+                        >
+                    </div>
+
+                    <p
+                        class="manifesto-lede text-text mb-10 max-w-[22ch] text-xl leading-[1.45] tracking-[-0.015em] sm:text-2xl"
+                    >
+                        {lede}
+                    </p>
+
+                    {
+                        practices.map((practice) => (
+                            <p class="manifesto-practice text-text-secondary mb-5 max-w-[26ch] text-base leading-[1.7] last:mb-0 sm:text-lg">
+                                {practice}
+                            </p>
+                        ))
+                    }
+
+                    <p
+                        class="manifesto-fade text-text mt-10 max-w-[26ch] text-base leading-[1.7] sm:text-lg"
+                    >
+                        Creamos más valor en
+                        <strong class="font-semibold tracking-[0.08em]">
+                            {" "}AXIOM</strong
+                        >
+                    </p>
                 </div>
             </div>
-        </div>
 
-        <div
-            class="flex flex-col justify-center px-6 py-16 sm:px-10 lg:py-24 lg:pr-12 lg:pl-10 xl:pr-16"
-        >
-            <div class="manifesto-label-row mb-10 flex items-center gap-4">
-                <span
-                    aria-hidden="true"
-                    class="manifesto-rule bg-accent block h-px w-10"></span>
-                <span
-                    class="manifesto-fade text-accent text-xs font-medium tracking-[0.2em] uppercase"
-                    >Nuestro manifiesto</span
+            <div
+                class="manifesto-act manifesto-act-two border-border relative mx-auto grid w-full max-w-360 gap-8 border-t lg:absolute lg:inset-0 lg:h-full lg:border-t-0 lg:grid-cols-[28fr_40fr_32fr] lg:gap-10 xl:gap-14"
+            >
+                <div
+                    class="flex flex-col justify-center px-6 py-16 sm:px-10 lg:py-24 lg:pl-12 xl:pl-16"
                 >
-            </div>
+                    <div
+                        class="manifesto-two-label-row mb-10 flex items-center gap-4"
+                    >
+                        <span
+                            aria-hidden="true"
+                            class="manifesto-two-rule bg-accent block h-px w-10"
+                        ></span>
+                        <span
+                            class="manifesto-two-fade text-accent text-xs font-medium tracking-[0.2em] uppercase"
+                            >Cómo lo hacemos</span
+                        >
+                    </div>
 
-            <p
-                class="manifesto-lede text-text mb-10 max-w-[22ch] text-xl leading-[1.45] tracking-[-0.015em] sm:text-2xl"
-            >
-                {lede}
-            </p>
-
-            {
-                practices.map((practice) => (
-                    <p class="manifesto-practice text-text-secondary mb-5 max-w-[26ch] text-base leading-[1.7] last:mb-0 sm:text-lg">
-                        {practice}
+                    <p
+                        class="manifesto-two-lede text-text mb-10 max-w-[24ch] text-xl leading-[1.45] tracking-[-0.015em] sm:text-2xl"
+                    >
+                        {ledeTwo}
                     </p>
-                ))
-            }
 
-            <p
-                class="manifesto-fade text-text mt-10 max-w-[26ch] text-base leading-[1.7] sm:text-lg"
-            >
-                Creamos más valor en
-                <strong class="font-semibold tracking-[0.08em]"> AXIOM</strong>
-            </p>
+                    {
+                        practicesTwo.map((practice) => (
+                            <p class="manifesto-two-practice text-text-secondary mb-5 max-w-[28ch] text-base leading-[1.7] last:mb-0 sm:text-lg">
+                                {practice}
+                            </p>
+                        ))
+                    }
+                </div>
+
+                <div
+                    class="manifesto-two-media relative min-h-[55vh] overflow-hidden lg:min-h-0"
+                >
+                    <div
+                        class="manifesto-two-parallax absolute inset-x-0 -top-[8%] flex h-[116%] items-center justify-center"
+                    >
+                        <div
+                            aria-hidden="true"
+                            class="manifesto-image manifesto-two-image h-full w-full overflow-hidden"
+                        >
+                            <img
+                                src="/section2.png"
+                                alt=""
+                                class="h-full w-full object-cover opacity-45"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="flex flex-col justify-center px-6 py-16 sm:px-10 lg:py-24 lg:pr-12 xl:pr-16"
+                >
+                    <span
+                        aria-hidden="true"
+                        class="manifesto-two-quote text-text mb-12 block text-right text-[5rem] leading-[0.75] font-medium select-none"
+                        >»</span
+                    >
+
+                    <h2
+                        class="manifesto-two-statement text-text text-right text-[clamp(2rem,3.4vw,3.5rem)] leading-[1.08] font-normal tracking-[-0.03em]"
+                    >
+                        {
+                            statementTwo.map((line) => (
+                                <span
+                                    class:list={[
+                                        "manifesto-two-line block",
+                                        { "mb-8": line.spacing },
+                                    ]}
+                                >
+                                    <span class="manifesto-two-line-inner block">
+                                        {line.text}
+                                    </span>
+                                </span>
+                            ))
+                        }
+                    </h2>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -159,6 +268,14 @@ const practices = [
             "(prefers-reduced-motion: reduce)"
         ).matches;
 
+        // The pinned crossfade choreography only makes sense once the
+        // 3-column layout is active (lg breakpoint) and motion is allowed.
+        // Below that, both acts render in normal document flow and each
+        // gets its own simple one-shot reveal instead.
+        const isDesktopPin =
+            !prefersReducedMotion &&
+            window.matchMedia("(min-width: 1024px)").matches;
+
         interface WordPair {
             mask: HTMLSpanElement;
             word: HTMLSpanElement;
@@ -194,42 +311,45 @@ const practices = [
             return pairs;
         }
 
+        function clamp01(n: number): number {
+            return Math.min(Math.max(n, 0), 1);
+        }
+
+        function zoneProgress(
+            progress: number,
+            start: number,
+            end: number
+        ): number {
+            return clamp01((progress - start) / (end - start));
+        }
+
+        function applyWordProgress(
+            pairs: WordPair[],
+            containerProgress: number
+        ) {
+            if (!pairs.length) return;
+            pairs.forEach((pair, index) => {
+                const start = index / pairs.length;
+                const end = (index + 1) / pairs.length;
+                const local = zoneProgress(containerProgress, start, end);
+
+                pair.word.style.opacity = String(local);
+                pair.word.style.transform = `translateY(${110 * (1 - local)}%)`;
+                pair.mask.style.overflow = local > 0.99 ? "visible" : "hidden";
+            });
+        }
+
         // Reveals each word of a text block as its container scrolls through
-        // the viewport. Uses a single scroll listener per block to keep
-        // performance high, then interpolates opacity/transform per word.
+        // the viewport. Used for the non-pinned (mobile / reduced-motion)
+        // fallback, where each act sits in normal document flow.
         function createScrollWordReveal(
             block: HTMLElement,
             pairs: WordPair[]
         ): (() => void) | undefined {
             if (!pairs.length) return undefined;
 
-            const items = pairs.map((pair, index) => ({
-                ...pair,
-                start: index / pairs.length,
-                end: (index + 1) / pairs.length,
-            }));
-
             return scroll(
-                (progress) => {
-                    items.forEach(({ mask, word, start, end }) => {
-                        const local = Math.min(
-                            Math.max((progress - start) / (end - start), 0),
-                            1
-                        );
-
-                        word.style.opacity = String(local);
-                        word.style.transform = `translateY(${110 * (1 - local)}%)`;
-
-                        if (local > 0.99 && mask.style.overflow !== "visible") {
-                            mask.style.overflow = "visible";
-                        } else if (
-                            local <= 0.99 &&
-                            mask.style.overflow !== "hidden"
-                        ) {
-                            mask.style.overflow = "hidden";
-                        }
-                    });
-                },
+                (progress) => applyWordProgress(pairs, progress),
                 {
                     target: block,
                     offset: ["start 85%", "start 35%"],
@@ -237,24 +357,65 @@ const practices = [
             );
         }
 
-        function initManifestoAnimations() {
+        function initActReveal(actSelector: string) {
             const section = document.querySelector("#manifiesto");
             if (!section) return;
 
-            const quote = section.querySelector(".manifesto-quote");
-            const lineInners = section.querySelectorAll(
-                ".manifesto-line-inner"
+            const act = section.querySelector(actSelector);
+            if (!act) return;
+
+            const quote = act.querySelector(
+                actSelector === ".manifesto-act-one"
+                    ? ".manifesto-quote"
+                    : ".manifesto-two-quote"
             );
-            const ledeEl = section.querySelector(".manifesto-lede");
-            const practiceEls = section.querySelectorAll(".manifesto-practice");
-            const media = section.querySelector(".manifesto-media");
-            const parallaxLayer = section.querySelector(".manifesto-parallax");
-            const image = section.querySelector(".manifesto-image");
-            const rule = section.querySelector(".manifesto-rule");
-            const labelRow = section.querySelector(".manifesto-label-row");
+            const lineInners = act.querySelectorAll(
+                actSelector === ".manifesto-act-one"
+                    ? ".manifesto-line-inner"
+                    : ".manifesto-two-line-inner"
+            );
+            const ledeEl = act.querySelector(
+                actSelector === ".manifesto-act-one"
+                    ? ".manifesto-lede"
+                    : ".manifesto-two-lede"
+            );
+            const practiceEls = act.querySelectorAll(
+                actSelector === ".manifesto-act-one"
+                    ? ".manifesto-practice"
+                    : ".manifesto-two-practice"
+            );
+            const media = act.querySelector(
+                actSelector === ".manifesto-act-one"
+                    ? ".manifesto-media"
+                    : ".manifesto-two-media"
+            );
+            const parallaxLayer = act.querySelector(
+                actSelector === ".manifesto-act-one"
+                    ? ".manifesto-parallax"
+                    : ".manifesto-two-parallax"
+            );
+            const image = act.querySelector(
+                actSelector === ".manifesto-act-one"
+                    ? ".manifesto-image"
+                    : ".manifesto-two-image"
+            );
+            const rule = act.querySelector(
+                actSelector === ".manifesto-act-one"
+                    ? ".manifesto-rule"
+                    : ".manifesto-two-rule"
+            );
+            const labelRow = act.querySelector(
+                actSelector === ".manifesto-act-one"
+                    ? ".manifesto-label-row"
+                    : ".manifesto-two-label-row"
+            );
 
             const fades: HTMLElement[] = [];
-            section.querySelectorAll(".manifesto-fade").forEach((el) => {
+            act.querySelectorAll(
+                actSelector === ".manifesto-act-one"
+                    ? ".manifesto-fade"
+                    : ".manifesto-two-fade"
+            ).forEach((el) => {
                 if (el instanceof HTMLElement) fades.push(el);
             });
 
@@ -284,8 +445,6 @@ const practices = [
                 return;
             }
 
-            // Split text blocks into words only when we will animate, so the
-            // plain markup stays untouched for no-JS / reduced-motion users.
             const statementWordPairs: WordPair[] = [];
             lineInners.forEach((inner) => {
                 if (!(inner instanceof HTMLElement)) return;
@@ -303,8 +462,6 @@ const practices = [
                 practiceWordPairs.push(splitElementIntoWords(practice));
             });
 
-            // Initial hidden states (only applied by JS, so content remains
-            // visible if scripts never run).
             if (quote instanceof HTMLElement) {
                 quote.style.opacity = "0";
                 quote.style.transform = "scale(0.8)";
@@ -315,9 +472,6 @@ const practices = [
                 word.style.opacity = "0";
                 word.style.transform = "translateY(110%)";
             });
-
-            // Lede and practices word spans also start hidden for their
-            // scroll-driven reveals.
             ledeWordPairs.forEach(({ word }) => {
                 word.style.opacity = "0";
                 word.style.transform = "translateY(110%)";
@@ -349,9 +503,6 @@ const practices = [
                 image.style.willChange = "transform";
             }
 
-            // Subtle scroll-linked parallax on the image layer. The layer is
-            // 116% tall with an 8% top overhang, so a ±6% drift never exposes
-            // the container edges.
             if (
                 parallaxLayer instanceof HTMLElement &&
                 media instanceof HTMLElement
@@ -370,7 +521,6 @@ const practices = [
                 );
             }
 
-            // 1. Quote glyph reveal (one-shot, unchanged).
             if (quote instanceof HTMLElement) {
                 let quotePlayed = false;
 
@@ -389,17 +539,14 @@ const practices = [
                             quote.style.willChange = "auto";
                         });
                     },
-                    {
-                        margin: "0px 0px -12% 0px",
-                        amount: 0.2,
-                    }
+                    { margin: "0px 0px -12% 0px", amount: 0.2 }
                 );
             }
 
-            // Statement word reveal is now driven by scroll progress of the
-            // statement block itself, not by a one-shot inView trigger.
-            const statementBlock = section.querySelector(
-                ".manifesto-statement"
+            const statementBlock = act.querySelector(
+                actSelector === ".manifesto-act-one"
+                    ? ".manifesto-statement"
+                    : ".manifesto-two-statement"
             );
             if (
                 statementBlock instanceof HTMLElement &&
@@ -408,11 +555,8 @@ const practices = [
                 createScrollWordReveal(statementBlock, statementWordPairs);
             }
 
-            // Lede and practices: scroll-linked word reveal, each with its own
-            // target and independent progress.
-            const ledeBlock = section.querySelector(".manifesto-lede");
-            if (ledeBlock instanceof HTMLElement && ledeWordPairs.length) {
-                createScrollWordReveal(ledeBlock, ledeWordPairs);
+            if (ledeEl instanceof HTMLElement && ledeWordPairs.length) {
+                createScrollWordReveal(ledeEl, ledeWordPairs);
             }
 
             practiceWordPairs.forEach((pairs, index) => {
@@ -420,12 +564,9 @@ const practices = [
                 if (!(practiceBlock instanceof HTMLElement) || !pairs.length) {
                     return;
                 }
-
                 createScrollWordReveal(practiceBlock, pairs);
             });
 
-            // 2. Center image: cinematic bottom-up clip reveal + settle scale.
-            // Slightly delayed so the statement leads the choreography.
             if (media instanceof HTMLElement) {
                 let mediaPlayed = false;
 
@@ -468,23 +609,18 @@ const practices = [
                             });
                         }
                     },
-                    {
-                        margin: "0px 0px -12% 0px",
-                        amount: 0.2,
-                    }
+                    { margin: "0px 0px -12% 0px", amount: 0.2 }
                 );
             }
 
-            // 3. Right column: the accent rule draws in, then the label, lede
-            // and practices fade up in stagger.
             if (labelRow instanceof HTMLElement && fades.length) {
-                let manifestoPlayed = false;
+                let railPlayed = false;
 
                 inView(
                     labelRow,
                     () => {
-                        if (manifestoPlayed) return;
-                        manifestoPlayed = true;
+                        if (railPlayed) return;
+                        railPlayed = true;
 
                         if (rule instanceof HTMLElement) {
                             const ruleAnimation = animate(
@@ -512,14 +648,256 @@ const practices = [
                             });
                         });
                     },
-                    {
-                        margin: "0px 0px -12% 0px",
-                        amount: 0.2,
-                    }
+                    { margin: "0px 0px -12% 0px", amount: 0.2 }
                 );
             }
         }
 
-        initManifestoAnimations();
+        // Pinned, scroll-scrubbed choreography: the section stays fixed on
+        // screen (position: sticky) while the user scrolls through a tall
+        // wrapper. A single scroll progress value (0-1) drives every visual
+        // — act one plays out, crossfades into act two, then act two plays.
+        function initManifestoPinned() {
+            const section = document.querySelector("#manifiesto");
+            const wrapper = section?.querySelector(".manifesto-pin-wrapper");
+            const actOne = section?.querySelector(".manifesto-act-one");
+            const actTwo = section?.querySelector(".manifesto-act-two");
+            if (
+                !(wrapper instanceof HTMLElement) ||
+                !(actOne instanceof HTMLElement) ||
+                !(actTwo instanceof HTMLElement)
+            ) {
+                return;
+            }
+
+            const quoteOne = actOne.querySelector(".manifesto-quote");
+            const lineInnersOne = actOne.querySelectorAll(
+                ".manifesto-line-inner"
+            );
+            const ledeOne = actOne.querySelector(".manifesto-lede");
+            const practiceElsOne = actOne.querySelectorAll(
+                ".manifesto-practice"
+            );
+            const mediaOne = actOne.querySelector(".manifesto-media");
+            const parallaxOne = actOne.querySelector(".manifesto-parallax");
+            const imageOne = actOne.querySelector(".manifesto-image");
+            const ruleOne = actOne.querySelector(".manifesto-rule");
+            const fadesOne: HTMLElement[] = [];
+            actOne.querySelectorAll(".manifesto-fade").forEach((el) => {
+                if (el instanceof HTMLElement) fadesOne.push(el);
+            });
+
+            const quoteTwo = actTwo.querySelector(".manifesto-two-quote");
+            const lineInnersTwo = actTwo.querySelectorAll(
+                ".manifesto-two-line-inner"
+            );
+            const ledeTwoEl = actTwo.querySelector(".manifesto-two-lede");
+            const practiceElsTwo = actTwo.querySelectorAll(
+                ".manifesto-two-practice"
+            );
+            const mediaTwo = actTwo.querySelector(".manifesto-two-media");
+            const parallaxTwo = actTwo.querySelector(
+                ".manifesto-two-parallax"
+            );
+            const imageTwo = actTwo.querySelector(".manifesto-two-image");
+            const ruleTwo = actTwo.querySelector(".manifesto-two-rule");
+            const fadesTwo: HTMLElement[] = [];
+            actTwo.querySelectorAll(".manifesto-two-fade").forEach((el) => {
+                if (el instanceof HTMLElement) fadesTwo.push(el);
+            });
+
+            const statementOnePairs: WordPair[] = [];
+            lineInnersOne.forEach((inner) => {
+                if (inner instanceof HTMLElement) {
+                    statementOnePairs.push(...splitElementIntoWords(inner));
+                }
+            });
+            const ledeOnePairs: WordPair[] =
+                ledeOne instanceof HTMLElement
+                    ? splitElementIntoWords(ledeOne)
+                    : [];
+            const practiceOnePairs: WordPair[][] = [];
+            practiceElsOne.forEach((el) => {
+                if (el instanceof HTMLElement) {
+                    practiceOnePairs.push(splitElementIntoWords(el));
+                }
+            });
+
+            const statementTwoPairs: WordPair[] = [];
+            lineInnersTwo.forEach((inner) => {
+                if (inner instanceof HTMLElement) {
+                    statementTwoPairs.push(...splitElementIntoWords(inner));
+                }
+            });
+            const ledeTwoPairs: WordPair[] =
+                ledeTwoEl instanceof HTMLElement
+                    ? splitElementIntoWords(ledeTwoEl)
+                    : [];
+            const practiceTwoPairs: WordPair[][] = [];
+            practiceElsTwo.forEach((el) => {
+                if (el instanceof HTMLElement) {
+                    practiceTwoPairs.push(splitElementIntoWords(el));
+                }
+            });
+
+            [
+                quoteOne,
+                mediaOne,
+                imageOne,
+                ruleOne,
+                quoteTwo,
+                mediaTwo,
+                imageTwo,
+                ruleTwo,
+                actOne,
+                actTwo,
+                ...fadesOne,
+                ...fadesTwo,
+            ].forEach((el) => {
+                if (el instanceof HTMLElement) {
+                    el.style.willChange = "transform, opacity, clip-path";
+                }
+            });
+
+            // Scroll fraction (0-1) each named beat occupies within the
+            // overall pin distance.
+            const Z = {
+                quoteOne: [0, 0.05] as const,
+                statementOne: [0.03, 0.16] as const,
+                ledeOne: [0.08, 0.18] as const,
+                practiceOne: [
+                    [0.12, 0.24],
+                    [0.14, 0.26],
+                    [0.16, 0.28],
+                ] as const,
+                mediaOne: [0.02, 0.2] as const,
+                railOne: [0.1, 0.2] as const,
+                parallaxOne: [0, 0.34] as const,
+                crossfade: [0.34, 0.48] as const,
+                quoteTwo: [0.5, 0.55] as const,
+                statementTwo: [0.53, 0.66] as const,
+                ledeTwo: [0.58, 0.68] as const,
+                practiceTwo: [
+                    [0.62, 0.74],
+                    [0.64, 0.76],
+                    [0.66, 0.78],
+                ] as const,
+                mediaTwo: [0.52, 0.7] as const,
+                railTwo: [0.6, 0.7] as const,
+                parallaxTwo: [0.5, 0.84] as const,
+            };
+
+            function handleProgress(progress: number) {
+                if (quoteOne instanceof HTMLElement) {
+                    const p = zoneProgress(progress, ...Z.quoteOne);
+                    quoteOne.style.opacity = String(p);
+                    quoteOne.style.transform = `scale(${0.8 + 0.2 * p})`;
+                }
+                applyWordProgress(
+                    statementOnePairs,
+                    zoneProgress(progress, ...Z.statementOne)
+                );
+                applyWordProgress(
+                    ledeOnePairs,
+                    zoneProgress(progress, ...Z.ledeOne)
+                );
+                practiceOnePairs.forEach((pairs, i) => {
+                    const [start, end] = Z.practiceOne[i];
+                    applyWordProgress(pairs, zoneProgress(progress, start, end));
+                });
+                if (mediaOne instanceof HTMLElement) {
+                    const p = zoneProgress(progress, ...Z.mediaOne);
+                    mediaOne.style.clipPath = `inset(${100 * (1 - p)}% 0% 0% 0%)`;
+                }
+                if (imageOne instanceof HTMLElement) {
+                    const p = zoneProgress(progress, ...Z.mediaOne);
+                    imageOne.style.transform = `scale(${1.12 - 0.12 * p})`;
+                }
+                if (ruleOne instanceof HTMLElement) {
+                    ruleOne.style.transformOrigin = "left center";
+                    ruleOne.style.transform = `scaleX(${zoneProgress(progress, ...Z.railOne)})`;
+                }
+                fadesOne.forEach((el, i) => {
+                    const [start, end] = Z.railOne;
+                    const p = zoneProgress(
+                        progress,
+                        start + i * 0.03,
+                        end + i * 0.03
+                    );
+                    el.style.opacity = String(p);
+                    el.style.transform = `translateY(${18 * (1 - p)}px)`;
+                });
+                if (parallaxOne instanceof HTMLElement) {
+                    const p = zoneProgress(progress, ...Z.parallaxOne);
+                    parallaxOne.style.transform = `translateY(${-6 + 12 * p}%)`;
+                }
+
+                const cf = zoneProgress(progress, ...Z.crossfade);
+                actOne.style.opacity = String(1 - cf);
+                actOne.style.transform = `translateY(${-30 * cf}px) scale(${1 - 0.04 * cf})`;
+                actOne.style.pointerEvents = cf < 0.5 ? "auto" : "none";
+                actTwo.style.opacity = String(cf);
+                actTwo.style.transform = `translateY(${30 * (1 - cf)}px) scale(${0.98 + 0.02 * cf})`;
+                actTwo.style.pointerEvents = cf >= 0.5 ? "auto" : "none";
+
+                if (quoteTwo instanceof HTMLElement) {
+                    const p = zoneProgress(progress, ...Z.quoteTwo);
+                    quoteTwo.style.opacity = String(p);
+                    quoteTwo.style.transform = `scale(${0.8 + 0.2 * p})`;
+                }
+                applyWordProgress(
+                    statementTwoPairs,
+                    zoneProgress(progress, ...Z.statementTwo)
+                );
+                applyWordProgress(
+                    ledeTwoPairs,
+                    zoneProgress(progress, ...Z.ledeTwo)
+                );
+                practiceTwoPairs.forEach((pairs, i) => {
+                    const [start, end] = Z.practiceTwo[i];
+                    applyWordProgress(pairs, zoneProgress(progress, start, end));
+                });
+                if (mediaTwo instanceof HTMLElement) {
+                    const p = zoneProgress(progress, ...Z.mediaTwo);
+                    mediaTwo.style.clipPath = `inset(${100 * (1 - p)}% 0% 0% 0%)`;
+                }
+                if (imageTwo instanceof HTMLElement) {
+                    const p = zoneProgress(progress, ...Z.mediaTwo);
+                    imageTwo.style.transform = `scale(${1.12 - 0.12 * p})`;
+                }
+                if (ruleTwo instanceof HTMLElement) {
+                    ruleTwo.style.transformOrigin = "left center";
+                    ruleTwo.style.transform = `scaleX(${zoneProgress(progress, ...Z.railTwo)})`;
+                }
+                fadesTwo.forEach((el, i) => {
+                    const [start, end] = Z.railTwo;
+                    const p = zoneProgress(
+                        progress,
+                        start + i * 0.03,
+                        end + i * 0.03
+                    );
+                    el.style.opacity = String(p);
+                    el.style.transform = `translateY(${18 * (1 - p)}px)`;
+                });
+                if (parallaxTwo instanceof HTMLElement) {
+                    const p = zoneProgress(progress, ...Z.parallaxTwo);
+                    parallaxTwo.style.transform = `translateY(${-6 + 12 * p}%)`;
+                }
+            }
+
+            handleProgress(0);
+
+            scroll(handleProgress, {
+                target: wrapper,
+                offset: ["start start", "end end"],
+            });
+        }
+
+        if (isDesktopPin) {
+            initManifestoPinned();
+        } else {
+            initActReveal(".manifesto-act-one");
+            initActReveal(".manifesto-act-two");
+        }
     </script>
 </section>
