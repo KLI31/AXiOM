@@ -55,3 +55,70 @@
     -webkit-mask-image: linear-gradient(to top, black, transparent);
     mask-image: linear-gradient(to top, black, transparent);
 }
+
+/* Halftone dust panel, growing from sparse (top) to near-solid black
+   (bottom edge) — used under the sidebar newsletter card. Same three
+   stacked dot layers as the full-width newsletter section, rotated to a
+   vertical axis. */
+.newsletter-dots-vertical::before,
+.newsletter-dots-vertical::after,
+.newsletter-dots-vertical > .newsletter-dots-vertical-dense {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+
+.newsletter-dots-vertical::before {
+    background-image: radial-gradient(
+        circle,
+        rgb(17 17 17 / 0.55) 1.1px,
+        transparent 1.4px
+    );
+    background-size: 7px 7px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 55%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 55%);
+}
+
+.newsletter-dots-vertical::after {
+    background-image: radial-gradient(
+        circle,
+        rgb(17 17 17 / 0.75) 1.9px,
+        transparent 2.3px
+    );
+    background-size: 10px 10px;
+    background-position: 3px 5px;
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 35%,
+        black 75%
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 35%,
+        black 75%
+    );
+}
+
+.newsletter-dots-vertical-dense {
+    background-image: radial-gradient(
+        circle,
+        rgb(17 17 17 / 0.92) 3px,
+        transparent 3.6px
+    );
+    background-size: 13px 13px;
+    background-position: 6px 8px;
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 65%,
+        black 100%
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 65%,
+        black 100%
+    );
+}
