@@ -1,4 +1,10 @@
 ---
+interface Props {
+    showWordmark?: boolean;
+}
+
+const { showWordmark = true } = Astro.props;
+
 const exploreLinks = [
     { label: "Artículos", href: "/articles" },
     { label: "Categorías", href: "/categories" },
@@ -102,26 +108,28 @@ const year = new Date().getFullYear();
         </div>
     </div>
 
-    <div
-        class="relative mx-auto flex w-full max-w-360 justify-center overflow-hidden"
-    >
-        <p
-            role="img"
-            aria-label="AXIOM"
-            class="axiom-wordmark text-text flex text-[clamp(7rem,34vw,26rem)] leading-none font-medium tracking-[-0.02em] opacity-[0.03] select-none"
-        >
-            {
-                "AXIOM".split("").map((letter) => (
-                    <span
-                        aria-hidden="true"
-                        class="axiom-letter-mask inline-block overflow-hidden"
-                    >
-                        <span class="axiom-letter inline-block">{letter}</span>
-                    </span>
-                ))
-            }
-        </p>
-    </div>
+    {
+        showWordmark && (
+            <div class="relative mx-auto flex w-full max-w-360 justify-center overflow-hidden">
+                <p
+                    role="img"
+                    aria-label="AXIOM"
+                    class="axiom-wordmark text-text flex text-[clamp(7rem,34vw,26rem)] leading-none font-medium tracking-[-0.02em] opacity-[0.03] select-none"
+                >
+                    {"AXIOM".split("").map((letter) => (
+                        <span
+                            aria-hidden="true"
+                            class="axiom-letter-mask inline-block overflow-hidden"
+                        >
+                            <span class="axiom-letter inline-block">
+                                {letter}
+                            </span>
+                        </span>
+                    ))}
+                </p>
+            </div>
+        )
+    }
 
     <script>
         import { inView, animate, stagger } from "motion";

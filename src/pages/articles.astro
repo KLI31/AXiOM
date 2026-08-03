@@ -1,0 +1,12 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import ArticlesHeader from "@/components/articles/ArticlesHeader.astro";
+import ArticlesExplorer from "@/components/articles/ArticlesExplorer.tsx";
+---
+
+<Layout footerWordmark={false}>
+    <ArticlesHeader />
+    <div class="bg-background relative z-10">
+        <ArticlesExplorer client:load />
+    </div>
+</Layout>

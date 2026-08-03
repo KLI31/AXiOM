@@ -3,6 +3,13 @@ import "@fontsource-variable/dm-sans/wght.css";
 import "../styles/global.css";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
+
+interface Props {
+    footerWordmark?: boolean;
+    title?: string;
+}
+
+const { footerWordmark = true, title = "Axiom" } = Astro.props;
 ---
 
 <!doctype html>
@@ -13,14 +20,14 @@ import Footer from "../components/Footer.astro";
         <link rel="icon" href="/favicon-32x32.png" sizes="32" />
         <link rel="icon" href="/favicon-16x16.png" sizes="16" />
         <meta name="generator" content={Astro.generator} />
-        <title>Axiom</title>
+        <title>{title}</title>
     </head>
     <body class="bg-background text-text">
         <Navbar />
         <main>
             <slot />
         </main>
-        <Footer />
+        <Footer showWordmark={footerWordmark} />
 
         <script>
             import { inView, animate } from "motion";

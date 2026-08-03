@@ -1,0 +1,60 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import ArticleHeader from "@/components/articles/ArticleHeader.astro";
+import ArticleCover from "@/components/articles/ArticleCover.astro";
+import ArticleBody from "@/components/articles/ArticleBody.astro";
+import ArticleNav from "@/components/articles/ArticleNav.astro";
+import SigueExplorando from "@/components/articles/SigueExplorando.astro";
+import ReadingProgressBar from "@/components/articles/ReadingProgressBar";
+import TableOfContents from "@/components/articles/TableOfContents";
+import {
+    articles,
+    getAdjacentArticles,
+    getRelatedArticles,
+} from "@/data/articles";
+
+export function getStaticPaths() {
+    return articles.map((article) => ({
+        params: { slug: article.slug },
+        props: { article },
+    }));
+}
+
+const { article } = Astro.props;
+const { previous, next } = getAdjacentArticles(article);
+const related = getRelatedArticles(article, 4);
+const readingMinutes = parseInt(article.readingTime, 10) || 0;
+const showToc =
+    readingMinutes >= 8 && article.content.some((b) => b.type === "heading");
+---
+
+<Layout footerWordmark={false} title={`${article.title} · Axiom`}>
+    <ReadingProgressBar client:load />
+
+    <div class="bg-background relative z-10">
+        <article
+            class="mx-auto w-full max-w-190 px-6 pt-28 pb-16 sm:px-10 lg:pt-36 lg:pb-24"
+        >
+            <div class={showToc ? "xl:relative" : ""}>
+                <ArticleHeader article={article} />
+                <ArticleCover article={article} />
+
+                {
+                    showToc && (
+                        <div class="mt-10 xl:mt-0">
+                            <TableOfContents client:load />
+                        </div>
+                    )
+                }
+
+                <div class="mt-10" data-article-content>
+                    <ArticleBody article={article} />
+                </div>
+            </div>
+
+            <ArticleNav previous={previous} next={next} />
+        </article>
+    </div>
+
+    <SigueExplorando articles={related} />
+</Layout>

@@ -1,0 +1,156 @@
+---
+import type { Article } from "@/data/articles";
+
+interface Props {
+    article: Article;
+}
+
+const { article } = Astro.props;
+
+const longDate = new Date(article.date).toLocaleDateString("es-ES", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+});
+
+const initials = article.author
+    .split(" ")
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+---
+
+<header class="mb-14">
+    <div class="article-header-animate mb-6 flex items-center gap-3">
+        <span
+            class="text-accent text-xs font-medium tracking-[0.2em] uppercase"
+        >
+            {article.category}
+        </span>
+        <span aria-hidden="true" class="text-text-secondary/50 text-xs">
+            ·
+        </span>
+        <span class="text-text-secondary text-xs">
+            {article.readingTime}
+        </span>
+    </div>
+
+    <h1
+        class="article-header-animate text-text mb-6 text-[clamp(2.25rem,4.6vw,3.75rem)] leading-[1.08] font-normal tracking-[-0.03em]"
+    >
+        {article.title}
+    </h1>
+
+    <p
+        class="article-header-animate text-text-secondary mb-8 max-w-[58ch] text-base leading-[1.7] sm:text-lg"
+    >
+        {article.excerpt}
+    </p>
+
+    <div
+        class="article-header-animate border-border flex items-center justify-between gap-6 border-t pt-6"
+    >
+        <div class="flex items-center gap-3">
+            <span
+                aria-hidden="true"
+                class="border-border bg-surface text-text flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-xs font-medium"
+            >
+                {initials}
+            </span>
+            <p class="text-text text-sm">
+                Por <span class="font-medium">{article.author}</span>
+                <span class="text-text-secondary"> · {longDate}</span>
+            </p>
+        </div>
+
+        <button
+            type="button"
+            class="article-share-button text-text hover:text-accent flex shrink-0 items-center gap-2 text-sm font-medium transition-colors"
+            data-share-title={article.title}
+        >
+            <span class="article-share-label">Compartir</span>
+            <span aria-hidden="true">↗</span>
+        </button>
+    </div>
+</header>
+
+<script>
+    function initShareButtons() {
+        const buttons = document.querySelectorAll(".article-share-button");
+
+        buttons.forEach((button) => {
+            button.addEventListener("click", async () => {
+                const title = button.getAttribute("data-share-title") ?? "";
+                const url = window.location.href;
+
+                if (navigator.share) {
+                    try {
+                        await navigator.share({ title, url });
+                        return;
+                    } catch {
+                        return;
+                    }
+                }
+
+                const label = button.querySelector(".article-share-label");
+                if (!label) return;
+
+                try {
+                    await navigator.clipboard.writeText(url);
+                    const original = label.textContent;
+                    label.textContent = "Enlace copiado";
+                    setTimeout(() => {
+                        if (original) label.textContent = original;
+                    }, 1800);
+                } catch {
+                    // Clipboard access denied; silently ignore.
+                }
+            });
+        });
+    }
+
+    initShareButtons();
+</script>
+
+<script>
+    import { animate, stagger } from "motion";
+
+    const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    const elements = document.querySelectorAll(".article-header-animate");
+
+    if (elements.length) {
+        if (prefersReducedMotion) {
+            elements.forEach((el) => {
+                if (el instanceof HTMLElement) el.style.opacity = "1";
+            });
+        } else {
+            elements.forEach((el) => {
+                if (el instanceof HTMLElement) {
+                    el.style.opacity = "0";
+                    el.style.transform = "translateY(16px)";
+                    el.style.willChange = "transform, opacity";
+                }
+            });
+
+            const animation = animate(
+                elements,
+                { opacity: [0, 1], y: [16, 0] },
+                {
+                    duration: 0.7,
+                    delay: stagger(0.1, { startDelay: 0.1 }),
+                    ease: [0.22, 1, 0.36, 1],
+                }
+            );
+
+            animation.then(() => {
+                elements.forEach((el) => {
+                    if (el instanceof HTMLElement) el.style.willChange = "auto";
+                });
+            });
+        }
+    }
+</script>

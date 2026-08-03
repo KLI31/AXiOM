@@ -1,0 +1,61 @@
+---
+import type { Article } from "@/data/articles";
+
+interface Props {
+    previous: Article | null;
+    next: Article | null;
+}
+
+const { previous, next } = Astro.props;
+---
+
+<nav
+    aria-label="Navegación entre artículos"
+    class="border-border mt-16 grid grid-cols-1 gap-6 border-t pt-8 sm:grid-cols-2"
+>
+    {
+        previous ? (
+            <a
+                href={`/articles/${previous.slug}`}
+                class="group flex min-w-0 flex-col gap-2"
+            >
+                <span class="text-text-secondary flex items-center gap-2 text-xs font-medium tracking-widest uppercase">
+                    <span aria-hidden="true">←</span>
+                    Anterior
+                </span>
+                <span class="text-text group-hover:text-accent text-base font-medium transition-colors">
+                    {previous.title}
+                </span>
+            </a>
+        ) : (
+            <span />
+        )
+    }
+
+    {
+        next && (
+            <a
+                href={`/articles/${next.slug}`}
+                class="group flex min-w-0 flex-col gap-2 sm:items-end sm:text-right"
+            >
+                <span class="text-text-secondary flex items-center gap-2 text-xs font-medium tracking-widest uppercase">
+                    Siguiente
+                    <span aria-hidden="true">→</span>
+                </span>
+                <span class="text-text group-hover:text-accent text-base font-medium transition-colors">
+                    {next.title}
+                </span>
+            </a>
+        )
+    }
+</nav>
+
+<div class="mt-10">
+    <a
+        href="/articles"
+        class="text-text-secondary hover:text-text inline-flex items-center gap-2 text-sm font-medium transition-colors"
+    >
+        <span aria-hidden="true">←</span>
+        Volver a artículos
+    </a>
+</div>

@@ -1,0 +1,31 @@
+---
+import PaperDot from "@/components/PaperDot";
+import type { Article } from "@/data/articles";
+
+interface Props {
+    article: Article;
+}
+
+const { article } = Astro.props;
+
+const dustGradient = `data:image/svg+xml,${encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">' +
+        '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
+        '<stop offset="0%" stop-color="#ffffff"/>' +
+        '<stop offset="45%" stop-color="#ffffff"/>' +
+        '<stop offset="100%" stop-color="#000000"/>' +
+        "</linearGradient></defs>" +
+        '<rect width="10" height="10" fill="url(#g)"/></svg>'
+)}`;
+---
+
+<div
+    class="article-cover border-border relative aspect-[16/9] w-full overflow-hidden border"
+>
+    <PaperDot
+        client:load
+        imageUrl={article.image === "__dust__" ? dustGradient : article.image}
+        colorBack="#f6f3ed"
+        fit="cover"
+    />
+</div>

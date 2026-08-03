@@ -1,0 +1,99 @@
+---
+import PaperDot from "@/components/PaperDot";
+
+const dustGradient = `data:image/svg+xml,${encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">' +
+        '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0">' +
+        '<stop offset="0%" stop-color="#ffffff"/>' +
+        '<stop offset="52%" stop-color="#ffffff"/>' +
+        '<stop offset="100%" stop-color="#000000"/>' +
+        "</linearGradient></defs>" +
+        '<rect width="10" height="10" fill="url(#g)"/></svg>'
+)}`;
+---
+
+<section
+    class="border-border bg-background relative z-0 overflow-hidden border-b"
+>
+    <div
+        aria-hidden="true"
+        class="paper-grain pointer-events-none absolute inset-0 z-0 select-none"
+    >
+    </div>
+
+    <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-y-0 right-0 w-full [mask-image:linear-gradient(to_right,transparent_0%,black_28%)] select-none [-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_28%)] lg:w-[58%]"
+    >
+        <PaperDot
+            client:load
+            imageUrl={dustGradient}
+            colorBack="#f6f3ed"
+            fit="cover"
+        />
+    </div>
+
+    <div
+        class="relative z-10 mx-auto w-full max-w-360 px-6 pt-36 pb-16 sm:px-10 lg:px-12 lg:pt-44 lg:pb-24 xl:px-16"
+    >
+        <div class="max-w-xl">
+            <span
+                class="articles-header-eyebrow text-accent mb-6 block text-xs font-medium tracking-[0.2em] uppercase"
+            >
+                Artículos
+            </span>
+
+            <h1
+                class="articles-header-title text-text mb-8 text-[clamp(2.25rem,4.6vw,3.75rem)] leading-[1.08] font-normal tracking-[-0.03em]"
+            >
+                <span class="block">Todas las ideas.</span>
+                <span class="block">Un mismo propósito.</span>
+            </h1>
+
+            <p
+                class="articles-header-lede text-text-secondary max-w-[42ch] text-base leading-[1.7] sm:text-lg"
+            >
+                Explora todas las publicaciones sobre tecnología, inteligencia
+                artificial y sistemas que optimizan el mañana.
+            </p>
+        </div>
+    </div>
+</section>
+
+<script>
+    import { animate, stagger } from "motion";
+
+    const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    const elements = document.querySelectorAll(
+        ".articles-header-eyebrow, .articles-header-title, .articles-header-lede"
+    );
+
+    if (elements.length) {
+        if (prefersReducedMotion) {
+            elements.forEach((el) => {
+                if (el instanceof HTMLElement) el.style.opacity = "1";
+            });
+        } else {
+            elements.forEach((el) => {
+                if (el instanceof HTMLElement) {
+                    el.style.opacity = "0";
+                    el.style.transform = "translateY(16px)";
+                    el.style.willChange = "transform, opacity";
+                }
+            });
+
+            animate(
+                elements,
+                { opacity: [0, 1], y: [16, 0] },
+                {
+                    duration: 0.7,
+                    delay: stagger(0.12, { startDelay: 0.15 }),
+                    ease: [0.22, 1, 0.36, 1],
+                }
+            );
+        }
+    }
+</script>
